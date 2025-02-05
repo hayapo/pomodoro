@@ -1,0 +1,2 @@
+export const DEFAULT_FOCUS_TIMER_MINUTE = 25;
+export const DEFAULT_REST_TIMER_MINUTE = 5;
