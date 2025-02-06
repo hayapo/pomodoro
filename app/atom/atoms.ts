@@ -1,10 +1,15 @@
 import { atom } from "jotai";
-import { PomodoroState } from "~/features/pomodoro/types/pomodoro";
-// import { DEFAULT_FOCUS_TIMER_MINUTE } from "~/features/pomodoro/constants";
-import { TimerState } from "~/features/timer/types/timer";
+import type { PomodoroState } from "~/features/pomodoro/types/pomodoro";
+import { DEFAULT_FOCUS_TIMER_MINUTE } from "~/features/pomodoro/constants";
+import type { TimerState } from "~/features/timer/types/timer";
 
-export const timerAtom = atom<TimerState>("notStarted")
+export const timerStateAtom = atom<TimerState>("notStarted")
 
-export const pomodoroAtom = atom<PomodoroState>("focus")
+export const pomodoroStateAtom = atom<PomodoroState>("focus")
 
-export const countAtom = atom(3);
+export const focusTimeAtom = atom(
+    null,
+    (_get, set, newValue: number) => set(timerCountAtom, newValue * 60),
+);
+
+export const timerCountAtom = atom(DEFAULT_FOCUS_TIMER_MINUTE * 60);

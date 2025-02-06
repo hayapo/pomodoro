@@ -1,32 +1,32 @@
-import { useCallback, useEffect } from "react";
-import { useAtom } from "jotai";
-import { countAtom, pomodoroAtom, timerAtom } from "~/atom/atoms";
+import { useEffect } from "react";
+import { useAtom, useSetAtom } from "jotai";
+import { focusTimeAtom, timerCountAtom, timerStateAtom } from "~/atom/atoms";
 import { DEFAULT_FOCUS_TIMER_MINUTE, DEFAULT_REST_TIMER_MINUTE } from "~/features/pomodoro/constants";
 import { usePomodoro } from "~/features/pomodoro/hooks/usePomodoro";
 
 export default function usePomodoroTimer() {
-    // const [pomodoroState, setPomodoroState] = useAtom(pomodoroAtom);
     const {
         pomodoroState,
         setPomodoroState,
         startNextPomodoro,
     } = usePomodoro();
-    const [count, setCount] = useAtom(countAtom);
-    const [timerState, setTimerState] = useAtom(timerAtom);
+    const [timerState, setTimerState] = useAtom(timerStateAtom);
+    const setFocusTime = useSetAtom(focusTimeAtom);
+    const [timer, setTimer] = useAtom(timerCountAtom);
 
     useEffect(() => {
         if (timerState === "started") {
             const id = setInterval(() => {
-                if (count === 0) {
+                if (timer === 0) {
                     console.log("finished");
                     startNextPomodoro();
                     return;
                 }
-                setCount((prev) => prev - 1)
+                setTimer((prev) => prev - 1)
             }, 1000);
             return () =>  clearInterval(id);
         }
-    }, [count, timerState, startNextPomodoro, setCount]);
+    }, [timerState, startNextPomodoro, timer, setTimer]);
     
     function startTimer() {
         setTimerState("started");
@@ -39,18 +39,17 @@ export default function usePomodoroTimer() {
     function resetTimer() {
         setTimerState("notStarted");
         if (pomodoroState === "focus") {
-            setCount(DEFAULT_FOCUS_TIMER_MINUTE * 60);
+            setFocusTime(DEFAULT_FOCUS_TIMER_MINUTE);
         } else {
-            setCount(DEFAULT_REST_TIMER_MINUTE * 60);
+            setFocusTime(DEFAULT_REST_TIMER_MINUTE);
         }
     }
 
     return {
-        count,
+        timer,
         timerState,
         pomodoroState,
         setPomodoroState,
-        startNextPomodoro,
         startTimer,
         stopTimer,
         resetTimer,

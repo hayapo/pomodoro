@@ -6,7 +6,7 @@ import { Display } from "react-7-segment-display";
 export default function Timer() {
     const isSkew = true;
     const {
-        count,
+        timer,
         timerState,
         pomodoroState,
         startTimer,
@@ -17,10 +17,10 @@ export default function Timer() {
     return (
         <div className="flex flex-col justify-center items-center">
             <div className="text-4xl fontt-bold">{pomodoroString}</div>
-            <div className="flex items-center">
-                <Display value={countToMinute(count)}  color="green" height={250} skew={isSkew} count={2}/>
+            <div className="flex items-center h-[250px]">
+                <Display value={countToMinute(timer)}  color="green" height={250} skew={isSkew} count={2}/>
                 <div className="text-8xl text-seven-segment-green">:</div>
-                <Display value={countToSecond(count)}  color="green" height={250} skew={isSkew} count={2}/>
+                <Display value={countToSecond(timer)}  color="green" height={250} skew={isSkew} count={2}/>
             </div>
             <div className="flex gap-5">
                 {timerState === "started" ? (
