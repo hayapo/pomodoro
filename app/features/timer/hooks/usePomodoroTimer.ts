@@ -30,6 +30,7 @@ export default function usePomodoroTimer() {
     
     function startTimer() {
         setTimerState("started");
+        setPomodoroState("focus");
     }
 
     function stopTimer() {
@@ -39,8 +40,10 @@ export default function usePomodoroTimer() {
     function resetTimer() {
         setTimerState("notStarted");
         if (pomodoroState === "focus") {
+            setPomodoroState("focus");
             setFocusTime(DEFAULT_FOCUS_TIMER_MINUTE);
         } else {
+            setPomodoroState("rest");
             setFocusTime(DEFAULT_REST_TIMER_MINUTE);
         }
     }

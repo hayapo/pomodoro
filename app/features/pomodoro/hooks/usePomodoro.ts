@@ -13,7 +13,7 @@ export function usePomodoro() {
             setPomodoroState("rest");
             setFocusTime(DEFAULT_REST_TIMER_MINUTE);
         } else {
-            setPomodoroState("focus")
+            setPomodoroState("focus");
             setFocusTime(DEFAULT_FOCUS_TIMER_MINUTE);
         }
     }, [pomodoroState, setPomodoroState, setFocusTime])

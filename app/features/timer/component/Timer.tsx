@@ -1,5 +1,7 @@
+import { FC } from "react";
 import usePomodoroTimer from "../hooks/usePomodoroTimer";
 import { countToMinute, countToSecond } from "../lib/timerFuntions";
+import { TimerState } from "../types/timer";
 import { createStateString } from "../util/createStateString";
 import { Display } from "react-7-segment-display";
 
@@ -14,52 +16,40 @@ export default function Timer() {
         resetTimer
     } = usePomodoroTimer();
     const pomodoroString = createStateString(timerState, pomodoroState);
+    // TODO: タイマーストップ時の色が見にくいのでいい感じの色にする
+    const timerColor = timerState === "stopped" ? "white" : "green";
+    const colonColor = timerState === "stopped" ? "text-white" :  "text-seven-segment-green"; 
     return (
-        <div className="flex flex-col justify-center items-center">
-            <div className="text-4xl fontt-bold">{pomodoroString}</div>
+        <div className="flex flex-col justify-center items-center gap-5">
+            <div className="text-4xl font-bold">{pomodoroString}</div>
             <div className="flex items-center h-[250px]">
-                <Display value={countToMinute(timer)}  color="green" height={250} skew={isSkew} count={2}/>
-                <div className="text-8xl text-seven-segment-green">:</div>
-                <Display value={countToSecond(timer)}  color="green" height={250} skew={isSkew} count={2}/>
+                <Display value={countToMinute(timer)}  color={timerColor} height={250} skew={isSkew} count={2}/>
+                <div className={`text-8xl ${colonColor}`}>:</div>
+                <Display value={countToSecond(timer)}  color={timerColor} height={250} skew={isSkew} count={2}/>
             </div>
-            <div className="flex gap-5">
+            <div>
                 {timerState === "started" ? (
-                    <TimerStopButton onClick={stopTimer}/>
+                    <TimerButton onClick={stopTimer} text="STOP" />
                 ) : (
-                    <TimerStartButton onClick={startTimer} />
+                    <TimerButton onClick={startTimer} text="START" />
                 )}
-                <button
-                    type="button"
-                    onClick={resetTimer}
-                    className="text-3xl"
-                    >
-                    reset
-                </button>
             </div>
+            <TimerButton onClick={resetTimer} text="RESET" />
         </div>
     )
 }
 
-function TimerStartButton(props: { onClick: () => void}) {
+function TimerButton(props: {
+    onClick: () => void;
+    text: string;
+}) {
     return (
         <button
-        type="button"
-        onClick={props.onClick}
-        className="text-3xl"
+            type="button"
+            onClick={props.onClick}
+            className="text-3xl font-bold"
         >
-        start
-    </button>
-    )
-}
-
-function TimerStopButton(props: { onClick: () => void}) {
-    return (
-        <button
-        type="button"
-        onClick={props.onClick}
-        className="text-3xl"
-        >
-        stop
-    </button>
+            {props.text}
+        </button>
     )
 }
