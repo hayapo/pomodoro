@@ -10,11 +10,11 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div className="h-screen max-w-screen-xl w-full">
+    <>
       <h1 className="p-4 text-3xl font-bold">Pomodoro Timer</h1>
-      <div className="h-screen flex items-center justify-center">
+      <div className="max-h-svh flex items-center justify-center">
         <Timer />
       </div>
-    </div>
+    </>
   );
 }
