@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { focusTimeAtom, timerCountAtom, timerStateAtom } from "~/atom/atoms";
+import { focusTimeAtom, focusTimerCountAtom, restTimerAtom, timerStateAtom } from "~/atom/atoms";
 import { DEFAULT_FOCUS_TIMER_MINUTE, DEFAULT_REST_TIMER_MINUTE } from "~/features/pomodoro/constants";
 import { usePomodoro } from "~/features/pomodoro/hooks/usePomodoro";
 
@@ -12,7 +12,8 @@ export default function usePomodoroTimer() {
     } = usePomodoro();
     const [timerState, setTimerState] = useAtom(timerStateAtom);
     const setFocusTime = useSetAtom(focusTimeAtom);
-    const [timer, setTimer] = useAtom(timerCountAtom);
+    const setRestTime = useSetAtom(restTimerAtom);
+    const [timer, setTimer] = useAtom(focusTimerCountAtom);
 
     useEffect(() => {
         if (timerState === "started") {
@@ -53,6 +54,8 @@ export default function usePomodoroTimer() {
         timerState,
         pomodoroState,
         setPomodoroState,
+        setFocusTime,
+        setRestTime,
         startTimer,
         stopTimer,
         resetTimer,

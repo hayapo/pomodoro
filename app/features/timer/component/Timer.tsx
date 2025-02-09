@@ -1,9 +1,8 @@
-import { FC } from "react";
 import usePomodoroTimer from "../hooks/usePomodoroTimer";
 import { countToMinute, countToSecond } from "../lib/timerFuntions";
-import { TimerState } from "../types/timer";
 import { createStateString } from "../util/createStateString";
 import { Display } from "react-7-segment-display";
+import { TimerForm } from "./TimerForm";
 
 export default function Timer() {
     const isSkew = true;
@@ -35,6 +34,7 @@ export default function Timer() {
                 )}
             </div>
             <TimerButton onClick={resetTimer} text="RESET" />
+            <TimerForm />
         </div>
     )
 }

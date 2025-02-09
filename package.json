@@ -11,6 +11,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
     "@remix-run/node": "^2.15.0",
     "@remix-run/react": "^2.15.0",
     "@remix-run/serve": "^2.15.0",
@@ -18,7 +19,9 @@
     "jotai": "^2.10.3",
     "react": "^18.2.0",
     "react-7-segment-display": "^1.1.2",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.54.2",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.15.0",

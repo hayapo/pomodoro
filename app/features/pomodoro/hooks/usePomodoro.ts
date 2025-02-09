@@ -9,6 +9,7 @@ export function usePomodoro() {
     const [pomodoroState, setPomodoroState] = useAtom(pomodoroStateAtom);
     const startNextPomodoro = useCallback(() => {
         // 次の pomodoroState に遷移し、遷移先のpomodoroStateに応じた時間でタイマーをセット
+        // TODO: 次のポモドーロでもカスタムしたタイマー時間をセットするようにする
         if (pomodoroState === "focus") {
             setPomodoroState("rest");
             setFocusTime(DEFAULT_REST_TIMER_MINUTE);
