@@ -14,6 +14,7 @@ export default function Timer() {
         stopTimer,
         resetTimer
     } = usePomodoroTimer();
+    console.log(timer);
     const pomodoroString = createStateString(timerState, pomodoroState);
     // TODO: タイマーストップ時の色が見にくいのでいい感じの色にする
     const timerColor = timerState === "stopped" ? "white" : "green";
