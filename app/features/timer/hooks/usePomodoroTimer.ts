@@ -1,77 +1,92 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAtom } from "jotai";
-import { focusTimeAtom, pomodoroStateAtom, restTimeAtom, timerAtom, timerStateAtom } from "~/atom/atoms";
+import { timerAtom, timerStateAtom } from "~/atom/atoms";
+import usePomodoro from "~/features/pomodoro/hooks/usePomodoro";
+import { preview } from "vite";
 
-export default function usePomodoroTimer() {
+const useTimer =() => {
     const [timerState, setTimerState] = useAtom(timerStateAtom);
-    const [pomodoroState, setPomodoroState] = useAtom(pomodoroStateAtom);
-    const [focusTime, setFocusTime] = useAtom(focusTimeAtom);
-    const [restTime, setRestTime] = useAtom(restTimeAtom);
     const [timer, setTimer] = useAtom(timerAtom);
     const [initialTime] = useState(Date.now);
-
-    const startNextPomodoro = useCallback(() => {
-        // 次の pomodoroState に遷移し、遷移先のpomodoroStateに応じた時間でタイマーをセット
-        // TODO: 次のポモドーロでもカスタムしたタイマー時間をセットするようにする
-        if (pomodoroState === "focus") {
-            setPomodoroState("rest");
-            setTimer(restTime);
-            // setFocusTime(DEFAULT_REST_TIMER_MINUTE);
-        } else {
-            setPomodoroState("focus");
-            setTimer(focusTime);
-            // setFocusTime(DEFAULT_FOCUS_TIMER_MINUTE);
-        }
-    }, [pomodoroState, focusTime, restTime, setPomodoroState, setTimer])
+    const {
+        focusTime,
+        setFocusTime,
+        restTime,
+        setRestTime,
+        pomodoroState,
+        setPomodoroState,
+    } = usePomodoro();
 
     useEffect(() => {
-        if (timerState === "notStarted" || timerState === "stopped") {
-            return;
-        }
-        const now = Date.now();
-        let nextTime = now + 1000 - ((now - initialTime) % 1000);
-        const loop = () => {
-            setTimer((c) => c - 1);
-            const now = Date.now();
-            nextTime = now + 1000 - ((nextTime - now) % 1000);
-            const diff = nextTime - now;    
-            timerId = setTimeout(loop, diff);
-        };
-        const diff = nextTime - now;
-        let timerId = setTimeout(loop, diff);
-        return () => {
-            clearTimeout(timerId);
-        };
-    }, [timerState, initialTime]);
+        const timerId = setInterval(() => {
+            setTimer((prev) => {
+                if (prev.paused) return prev;
+                return prev.count === 0
+                    ? {
+                        ...prev,
+                        pomodoroState: prev.pomodoroState === 'focus' ? 'rest' : 'focus',
+                        count: prev.pomodoroState === 'focus' ? restTime : focusTime,
+                    }
+                    : {
+                        ...prev,
+                        count: prev.count -1,
+                    }
+            }
+            )
+        }, 1000);
+        return () => clearInterval(timerId);
+    })
     
     function startTimer() {
-        // if (timerState === "notStarted") {
-        //         switch (pomodoroState) {
-        //         case "focus":
-        //             setPomodoroState("focus");
-        //             setTimer(focusTimeMinute);
-        //             break;
-        //         case "rest":
-        //             setPomodoroState("rest");
-        //             setTimer(restTimeMinute);
-        //             break;
-        //     }
-        // }
+        if (timerState === "notStarted" || timerState === "stopped") {
+            switch (pomodoroState) {
+                case "focus":
+                    setPomodoroState("focus");
+                    setTimer((prev) => ({
+                        paused: false,
+                        pomodoroState: 'focus',
+                        count: prev.count,
+                    }));
+                    break;
+            case "rest":
+                setPomodoroState("rest");
+                    setTimer((prev) => ({
+                        paused: false,
+                        pomodoroState: 'focus',
+                        count: prev.count,
+                    }));
+                    break;
+            }
+        }
         setTimerState("started");
     }
 
     function stopTimer() {
         setTimerState("stopped");
+        setTimer((prev) => {
+            return {
+                ...prev,
+                paused: true,
+            }
+        })
     }
 
     function resetTimer() {
         setTimerState("notStarted");
         if (pomodoroState === "focus") {
             setPomodoroState("focus");
-            setTimer(focusTime);
+            setTimer((prev) => ({
+                ...prev,
+                paused: true,
+                count: focusTime,
+            }));
         } else {
             setPomodoroState("rest");
-            setTimer(restTime);
+            setTimer((prev) => ({
+                ...prev,
+                paused: true,
+                count: restTime,
+            }));
         }
     }
 
@@ -86,4 +101,6 @@ export default function usePomodoroTimer() {
         stopTimer,
         resetTimer,
     }
-}
+};
+
+export default useTimer;

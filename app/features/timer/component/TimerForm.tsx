@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { DEFAULT_FOCUS_TIMER_MINUTE, DEFAULT_REST_TIMER_MINUTE } from "~/features/pomodoro/constants";
-import usePomodoroTimer from "../hooks/usePomodoroTimer";
+import usePomodoro from "~/features/pomodoro/hooks/usePomodoro";
 
 const MIN_COUNT_WARNING = "タイマーのカウントは1分以上である必要があります";
 const MAX_COUNT_WARNING = "タイマーのカウントは60分以下である必要があります";
@@ -15,7 +15,7 @@ export const formValues = z.object({
 export type IFormValues = z.infer<typeof formValues>;
 
 export function TimerForm() {
-    const { setFocusTime, setRestTime } = usePomodoroTimer();
+    const { setFocusTime, setRestTime } = usePomodoro();
     const {
         register,
         handleSubmit,
