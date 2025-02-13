@@ -3,14 +3,24 @@ import type { PomodoroState } from "~/features/pomodoro/types/pomodoro";
 import { DEFAULT_FOCUS_TIMER_MINUTE, DEFAULT_REST_TIMER_MINUTE } from "~/features/pomodoro/constants";
 import type { TimerState } from "~/features/timer/types/timer";
 import type { SetStateAction } from "jotai";
+import { atomWithImmer } from "jotai-immer";
 
 export const timerStateAtom = atom<TimerState>("notStarted")
 
 export const pomodoroStateAtom = atom<PomodoroState>("focus")
 
+// TODO: focusTimeAtomとrestTimeAtomもオブジェクトにして、minuteとsecondを持つようにする
+
 export const focusTimeAtom = atom(DEFAULT_FOCUS_TIMER_MINUTE);
 
 export const restTimeAtom = atom(DEFAULT_REST_TIMER_MINUTE);
+
+export const pomodoroTimesInSecondAtom = atom(
+    (get) => ({
+        focus: get(focusTimeAtom) * 60,
+        rest: get(restTimeAtom) * 60,
+    })
+);
 
 export type TimerAtomType = {
     paused: boolean;
@@ -18,7 +28,7 @@ export type TimerAtomType = {
     count: number;
 };
 
-const _timerAtom = atom<TimerAtomType>({
+const _timerAtom = atomWithImmer<TimerAtomType>({
     paused: true,
     pomodoroState: 'focus',
     count: DEFAULT_FOCUS_TIMER_MINUTE * 60
