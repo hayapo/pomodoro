@@ -1,22 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAtom } from "jotai";
-import { timerAtom, timerStateAtom } from "~/atom/atoms";
+import { timerAtom, TimerAtomType, timerStateAtom } from "~/atom/atoms";
 import usePomodoro from "~/features/pomodoro/hooks/usePomodoro";
-import { preview } from "vite";
+import { SetStateAction } from "jotai";
 
 const useTimer =() => {
-    const [timerState, setTimerState] = useAtom(timerStateAtom);
     const [timer, setTimer] = useAtom(timerAtom);
-    const [initialTime] = useState(Date.now);
     const {
-        focusTime,
         setFocusTime,
-        restTime,
         setRestTime,
-        pomodoroState,
-        setPomodoroState,
+        pomodoroTimesInSecond
     } = usePomodoro();
 
+    // biome-ignore lint: useExhaustiveDependencies
     useEffect(() => {
         const timerId = setInterval(() => {
             setTimer((prev) => {
@@ -25,7 +21,7 @@ const useTimer =() => {
                     ? {
                         ...prev,
                         pomodoroState: prev.pomodoroState === 'focus' ? 'rest' : 'focus',
-                        count: prev.pomodoroState === 'focus' ? restTime : focusTime,
+                        count: prev.pomodoroState === 'focus' ? pomodoroTimesInSecond.rest : pomodoroTimesInSecond.focus,
                     }
                     : {
                         ...prev,
@@ -35,71 +31,53 @@ const useTimer =() => {
             )
         }, 1000);
         return () => clearInterval(timerId);
-    })
+    }, [setTimer])
     
-    function startTimer() {
-        if (timerState === "notStarted" || timerState === "stopped") {
-            switch (pomodoroState) {
-                case "focus":
-                    setPomodoroState("focus");
-                    setTimer((prev) => ({
-                        paused: false,
-                        pomodoroState: 'focus',
-                        count: prev.count,
-                    }));
-                    break;
-            case "rest":
-                setPomodoroState("rest");
-                    setTimer((prev) => ({
-                        paused: false,
-                        pomodoroState: 'focus',
-                        count: prev.count,
-                    }));
-                    break;
+    const startTimer = useCallback(() => (
+        setTimer((prev) => {
+            return {
+                ...prev,
+                paused: false,
             }
-        }
-        setTimerState("started");
-    }
+        })
+    ), [setTimer]);
 
-    function stopTimer() {
-        setTimerState("stopped");
+    const stopTimer = useCallback(() => {
         setTimer((prev) => {
             return {
                 ...prev,
                 paused: true,
             }
         })
-    }
+    }, [setTimer])
 
-    function resetTimer() {
-        setTimerState("notStarted");
-        if (pomodoroState === "focus") {
-            setPomodoroState("focus");
-            setTimer((prev) => ({
-                ...prev,
-                paused: true,
-                count: focusTime,
-            }));
-        } else {
-            setPomodoroState("rest");
-            setTimer((prev) => ({
-                ...prev,
-                paused: true,
-                count: restTime,
-            }));
-        }
-    }
+    const resetTimer = useCallback(() => (
+        setTimer((prev) => 
+            prev.pomodoroState === 'focus'
+                ?
+                    {
+                        ...prev,
+                        paused: true,
+                        count: pomodoroTimesInSecond.focus,
+                    }
+                :
+                    {
+                        ...prev,
+                        paused: true,
+                        count: pomodoroTimesInSecond.rest,
+                    }
+        )
+    ), [setTimer, pomodoroTimesInSecond]);
 
     return {
         timer,
-        timerState,
-        pomodoroState,
-        setPomodoroState,
+        setTimer,
         setFocusTime,
         setRestTime,
         startTimer,
         stopTimer,
         resetTimer,
+        pomodoroTimesInSecond
     }
 };
 
