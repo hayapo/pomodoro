@@ -24,6 +24,7 @@ type Props = {
     setTimer: SetAtom<[newValue: SetStateAction<TimerAtomType>], void>;
 }
 
+// TODO: カスタマイズフォームはDrawerとかPopover, Dialogを使って常時表示しないようにするのが良いかも
 export function TimerForm(props: Props) {
     const {
         setFocusTime,
