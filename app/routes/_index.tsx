@@ -3,8 +3,8 @@ import Timer from "~/features/timer/component/Timer";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Segment Pomodoro Timer" },
+    { name: "description", content: "ポモドーロタイマーを広告フリーで使いたい人による、ポモドーロタイマーを広告フリーで使いたい人のための、ポモドーロタイマーを広告フリーで使えるサイト" },
   ];
 };
 
