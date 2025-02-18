@@ -32,6 +32,7 @@ export default function Timer() {
                 <div className={`text-8xl ${colonColor} text-lime`}>:</div>
                 <Display value={countToSecond(timer.count)}  color={timerColor} height={250} skew={isSkew} count={2}/>
             </div>
+            {/* TODO: リセット時とストップ時にトーストを表示する */}
             <div>
                 {timer.paused ? (
                     <TimerButton onClick={startTimer} text="START" />
@@ -44,6 +45,7 @@ export default function Timer() {
         </div>
     )
 }
+
 
 function TimerButton(props: {
     onClick: () => void;
