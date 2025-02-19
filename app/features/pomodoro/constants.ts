@@ -1,2 +1,2 @@
-export const DEFAULT_FOCUS_TIMER_MINUTE = 1;
-export const DEFAULT_REST_TIMER_MINUTE = 0.5;
+export const DEFAULT_FOCUS_TIMER_MINUTE = 0.1;
+export const DEFAULT_REST_TIMER_MINUTE = 0.05;

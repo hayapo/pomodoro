@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useAtom } from "jotai";
-import { timerAtom, TimerAtomType, timerStateAtom } from "~/atom/atoms";
+import { timerAtom } from "~/atom/atoms";
 import usePomodoro from "~/features/pomodoro/hooks/usePomodoro";
-import { SetStateAction } from "jotai";
 
 const useTimer =() => {
     const [timer, setTimer] = useAtom(timerAtom);
@@ -11,27 +10,6 @@ const useTimer =() => {
         setRestTime,
         pomodoroTimesInSecond
     } = usePomodoro();
-
-    // biome-ignore lint: useExhaustiveDependencies
-    useEffect(() => {
-        const timerId = setInterval(() => {
-            setTimer((prev) => {
-                if (prev.paused) return prev;
-                return prev.count === 0
-                    ? {
-                        ...prev,
-                        pomodoroState: prev.pomodoroState === 'focus' ? 'rest' : 'focus',
-                        count: prev.pomodoroState === 'focus' ? pomodoroTimesInSecond.rest : pomodoroTimesInSecond.focus,
-                    }
-                    : {
-                        ...prev,
-                        count: prev.count -1,
-                    }
-            }
-            )
-        }, 1000);
-        return () => clearInterval(timerId);
-    }, [setTimer])
     
     const startTimer = useCallback(() => (
         setTimer((prev) => {

@@ -1,4 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { cva } from "class-variance-authority";
+import clsx from "clsx";
 import type { SetStateAction } from "jotai";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -50,10 +52,16 @@ export function TimerForm(props: Props) {
         );
     };
 
+    const buttonClassName = clsx(
+        'focus-visible:outline-4',
+        'focus-visible:outline-seggreen',
+        'focus-visible:ring-0'
+    );
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className='w-[15rem] flex flex-col gap-4 overflow-auto'>
+                <div className='w-[15rem] flex flex-col gap-4 p-4'>
                     <FormField
                         control={form.control}
                         name='focus'
@@ -62,7 +70,7 @@ export function TimerForm(props: Props) {
                                 <FormLabel>集中する時間 (min) をカスタマイズ</FormLabel>
                                 <FormControl>
                                     <Input
-                                        className='focus-visible:border-2 focus-visible:border-seven-segment-green'
+                                        className={buttonClassName}
                                         placeholder="25"
                                         {...field}
                                     />
@@ -82,7 +90,7 @@ export function TimerForm(props: Props) {
                                 <FormLabel>休憩する時間 (min) をカスタマイズ</FormLabel>
                                 <FormControl>
                                     <Input
-                                        className='focus-visible:border-2 focus-visible:border-seven-segment-green'
+                                        className={buttonClassName}
                                         placeholder="25"
                                         {...field}
                                         />
@@ -95,10 +103,11 @@ export function TimerForm(props: Props) {
                         )}
                     />
                     <Button
+                        variant='secondary'
                         type="submit"
-                        className='focus-visible:border-2 focus-visible:border-seven-segment-green'
+                        className={buttonClassName}
                     >
-                            タイマーをセット
+                        タイマーをセット
                     </Button>
                 </div>
             </form>
