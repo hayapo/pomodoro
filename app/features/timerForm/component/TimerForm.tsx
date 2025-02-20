@@ -6,12 +6,9 @@ import type { TimerAtomType } from "~/atom/atoms";
 import type { SetAtom } from "~/atom/types";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { DEFAULT_FOCUS_TIMER_MINUTE, DEFAULT_REST_TIMER_MINUTE } from "~/features/pomodoro/constants";
 import usePomodoro from "~/features/pomodoro/hooks/usePomodoro";
 import { outlineStyle } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
-import clsx from "clsx";
-import { DrawerClose } from "~/components/ui/drawer";
 
 const MIN_COUNT_WARNING = "タイマーのカウントは1分以上である必要があります";
 const MAX_COUNT_WARNING = "タイマーのカウントは60分以下である必要があります";
@@ -25,6 +22,7 @@ export type IFormValues = z.infer<typeof formValues>;
 
 type Props = {
     setTimer: SetAtom<[newValue: SetStateAction<TimerAtomType>], void>;
+    setOpen: SetAtom<[SetStateAction<boolean>], void>
 }
 
 // TODO: カスタマイズフォームはDrawerとかPopover, Dialogを使って常時表示しないようにするのが良いかも
@@ -53,6 +51,7 @@ export function TimerForm(props: Props) {
                 count: data.focus,
             }
         );
+        props.setOpen(false);
     };
 
     return (

@@ -4,13 +4,21 @@ import { TimerForm } from "./TimerForm";
 import usePomodoroTimer from "~/features/timer/hooks/usePomodoroTimer";
 import { outlineStyle } from "~/lib/utils";
 import clsx from "clsx";
+import { useCallback, useState } from "react";
+import { atom, useAtom } from "jotai";
+
+const drawerAtom = atom(false);
 
 export function TimerFormDrawer() {
     const { setTimer } = usePomodoroTimer();
+    const [open, setOpen] = useState(false);
+
     return (
-        <Drawer>
+        <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button variant='outline' className={clsx(outlineStyle, 'w-[150px] p-6')}>タイマーをカスタマイズ</Button>
+                <Button variant='outline' className={clsx(outlineStyle, 'w-[150px] p-6')}>
+                    タイマーをカスタマイズ
+                </Button>
             </DrawerTrigger>
             <DrawerContent>
                 <div className="mx-auto w-full max-w-sm">
@@ -23,7 +31,7 @@ export function TimerFormDrawer() {
                         </DrawerDescription>
                     </DrawerHeader>
                     <div className="p-4">
-                        <TimerForm setTimer={setTimer}/>
+                        <TimerForm setTimer={setTimer} setOpen={setOpen} />
                     </div>
                     <DrawerFooter>
                         <DrawerClose asChild>
