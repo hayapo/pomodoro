@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import Timer from "~/features/timer/component/Timer";
+import { TimerFormDrawer } from "~/features/timerForm/component/TimerFormDrawer";
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,8 +13,9 @@ export default function Index() {
   return (
     <>
       <h1 className="p-4 text-3xl font-bold">Pomodoro Timer</h1>
-      <div className="max-h-svh flex items-center justify-center">
+      <div className="max-h-svh flex flex-col items-center justify-center gap-20">
         <Timer />
+        <TimerFormDrawer />
       </div>
     </>
   );

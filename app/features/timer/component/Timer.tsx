@@ -1,9 +1,8 @@
-import useTimer from "../hooks/usePomodoroTimer";
+import usePomodoroTimer from "../hooks/usePomodoroTimer";
 import { countToMinute, countToSecond } from "../lib/timerFuntions";
 import { createStateString } from "../util/createStateString";
-import { TimerForm } from "./TimerForm";
+import { TimerForm } from "../../timerForm/component/TimerForm";
 import { Button } from "~/components/ui/button";
-import clsx from "clsx";
 import { SegmentDisplay } from "~/components/parts/SegmentDisplay/SegmentDisplay";
 import { useEffect } from "react";
 import { cn } from "~/lib/utils";
@@ -16,7 +15,7 @@ export default function Timer() {
         stopTimer,
         resetTimer,
         pomodoroTimesInSecond,
-    } = useTimer();
+    } = usePomodoroTimer();
 
     // biome-ignore lint: useExhaustiveDependencies
     useEffect(() => {
@@ -67,7 +66,6 @@ export default function Timer() {
                 )}
             </div>
             <TimerButton onClick={resetTimer} text="RESET" />
-            <TimerForm setTimer={setTimer}/>
         </div>
     )
 }

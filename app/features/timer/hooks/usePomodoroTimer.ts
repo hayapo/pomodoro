@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { timerAtom } from "~/atom/atoms";
 import usePomodoro from "~/features/pomodoro/hooks/usePomodoro";
 
-const useTimer =() => {
+const usePomodoroTimer =() => {
     const [timer, setTimer] = useAtom(timerAtom);
     const {
         setFocusTime,
@@ -59,4 +59,4 @@ const useTimer =() => {
     }
 };
 
-export default useTimer;
+export default usePomodoroTimer;
