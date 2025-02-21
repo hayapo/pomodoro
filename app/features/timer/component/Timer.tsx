@@ -1,12 +1,10 @@
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo } from 'react';
-import { SegmentDisplay } from '~/features/SegmentDisplay/components/SegmentDisplay';
 import { Button } from '~/components/ui/button';
-import { cn } from '~/lib/utils';
 import usePomodoroTimer from '../hooks/usePomodoroTimer';
-import { countToMinute, countToSecond } from '../lib/timerFuntions';
 import { showPomodoroTextAtom } from '../states/showPomodoroTextAtom';
 import { createPomodoroText } from '../util/createPomodoroText';
+import { TimerDisplay } from '~/features/SegmentDisplay/components/TimerDisplay/TimerDisplay';
 
 export default function Timer() {
 	const {
@@ -46,27 +44,12 @@ export default function Timer() {
 		return () => clearInterval(timerId);
 	}, [setTimer]);
 
-	/**
-	 * TODO: タイマーストップ時の色が見にくいのでいい感じの色にする。デザイントークン的なものを定義しておきたい
-	 * DisplayのcolorにはCSSのデフォルトの166色が使えるっぽい
-	 * @see: https://developer.mozilla.org/ja/docs/Web/CSS/named-color
-	 * */
-	const colonClassName = cn('text-8xl font-bold', {
-		'text-seggreen': !timer.paused && timer.pomodoroState === 'focus',
-		'text-segblue': !timer.paused && timer.pomodoroState === 'rest',
-		'text-white': timer.paused,
-	});
-
 	return (
 		<div className='flex flex-col justify-center items-center gap-5'>
 			{showPomodoroText && (
-				<div className='text-4xl font-bold'>{pomodoroText}</div>
+				<div className='text-3xl md:text-4xl font-bold'>{pomodoroText}</div>
 			)}
-			<div className='flex items-center h-[250px]'>
-				<SegmentDisplay value={countToMinute(timer.count)} timer={timer} />
-				<div className={colonClassName}>:</div>
-				<SegmentDisplay value={countToSecond(timer.count)} timer={timer} />
-			</div>
+			<TimerDisplay />
 			<div>
 				{timer.paused ? (
 					<TimerButton onClick={startTimer} text='START' />
