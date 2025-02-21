@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type SetStateAction, useAtom } from 'jotai';
 import type { Dispatch } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Checkbox } from '~/components/ui/checkbox';
@@ -60,6 +61,7 @@ export function TimerForm({ setOpen }: Props) {
 		});
 		setShowPomodoroText(data.showPomodoroText);
 		setOpen(false);
+		toast('カスタマイズを登録しました')
 	};
 
 	return (
