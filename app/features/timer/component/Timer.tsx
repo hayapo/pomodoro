@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo } from 'react';
-import { SegmentDisplay } from '~/components/parts/SegmentDisplay/SegmentDisplay';
+import { SegmentDisplay } from '~/features/SegmentDisplay/components/SegmentDisplay';
 import { Button } from '~/components/ui/button';
 import { cn } from '~/lib/utils';
 import usePomodoroTimer from '../hooks/usePomodoroTimer';

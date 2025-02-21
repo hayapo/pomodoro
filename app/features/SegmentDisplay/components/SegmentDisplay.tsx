@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Display } from 'react-7-segment-display';
-import type { TimerState } from '../../../features/Timer/states/timerAtom';
+import type { TimerState } from '../../Timer/states/timerAtom';
 
 type Props = {
 	valiants?: string;
