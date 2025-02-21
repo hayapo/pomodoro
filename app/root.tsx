@@ -7,6 +7,7 @@ import {
 	ScrollRestoration,
 } from '@remix-run/react';
 import sytles from './tailwind.css?url';
+import { Toaster } from './components/ui/sonner';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: sytles }];
 
@@ -19,11 +20,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Meta />
 				<Links />
 			</head>
-			<body className='h-svh w-screen-xl w-full'>
-				<h1 className='p-4 text-3xl font-bold'>Pomodoro Timer</h1>
+			<body className='h-[calc(100svh-60px)] w-screen-xl w-full'>
+				<h1 className='h-[60px] px-4 py-2 text-3xl font-bold'>Pomodoro Timer</h1>
 				{children}
 				<ScrollRestoration />
 				<Scripts />
+				<Toaster />
 			</body>
 		</html>
 	);
