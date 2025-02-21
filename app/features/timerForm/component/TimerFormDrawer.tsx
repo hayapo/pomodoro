@@ -1,13 +1,10 @@
 import { Button } from "~/components/ui/button";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger, DrawerPortal } from "~/components/ui/drawer";
 import { TimerForm } from "./TimerForm";
-import usePomodoroTimer from "~/features/timer/hooks/usePomodoroTimer";
+import usePomodoroTimer from "~/features/Timer/hooks/usePomodoroTimer";
 import { outlineStyle } from "~/lib/utils";
 import clsx from "clsx";
-import { useCallback, useState } from "react";
-import { atom, useAtom } from "jotai";
-
-const drawerAtom = atom(false);
+import { useState } from "react";
 
 export function TimerFormDrawer() {
     const { setTimer } = usePomodoroTimer();
@@ -16,8 +13,8 @@ export function TimerFormDrawer() {
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button variant='outline' className={clsx(outlineStyle, 'w-[150px] p-6')}>
-                    タイマーをカスタマイズ
+                <Button variant='outline' className={clsx(outlineStyle, 'w-[150px] p-4')}>
+                    カスタマイズ
                 </Button>
             </DrawerTrigger>
             <DrawerContent>

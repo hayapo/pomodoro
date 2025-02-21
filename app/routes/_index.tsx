@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
-import Timer from "~/features/timer/component/Timer";
-import { TimerFormDrawer } from "~/features/timerForm/component/TimerFormDrawer";
+import Timer from "~/features/Timer/component/Timer";
+import { TimerFormDrawer } from "~/features/TimerForm/component/TimerFormDrawer";
 
 export const meta: MetaFunction = () => {
   return [

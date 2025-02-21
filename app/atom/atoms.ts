@@ -1,16 +1,10 @@
 import { atom } from "jotai";
-import type { PomodoroState } from "~/features/pomodoro/types/pomodoro";
-import { DEFAULT_FOCUS_TIMER_MINUTE, DEFAULT_REST_TIMER_MINUTE } from "~/features/pomodoro/constants";
-import type { TimerState } from "~/features/timer/types/timer";
+import type { PomodoroState } from "~/features/Pomodoro/types/pomodoro";
+import { DEFAULT_FOCUS_TIMER_MINUTE, DEFAULT_REST_TIMER_MINUTE } from "~/features/Pomodoro/constants";
 import type { SetStateAction } from "jotai";
 import { atomWithImmer } from "jotai-immer";
 
-export const timerStateAtom = atom<TimerState>("notStarted")
-
-export const pomodoroStateAtom = atom<PomodoroState>("focus")
-
 // TODO: focusTimeAtomとrestTimeAtomもオブジェクトにして、minuteとsecondを持つようにする
-
 export const focusTimeAtom = atom(DEFAULT_FOCUS_TIMER_MINUTE);
 
 export const restTimeAtom = atom(DEFAULT_REST_TIMER_MINUTE);
@@ -51,3 +45,5 @@ export const timerAtom = atom(
         set(_timerAtom, nextValue);
     }
 );
+
+export const showPomodoroTextAtom = atom(true);

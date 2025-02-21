@@ -1,10 +1,9 @@
 import usePomodoroTimer from "../hooks/usePomodoroTimer";
 import { countToMinute, countToSecond } from "../lib/timerFuntions";
-import { createStateString } from "../util/createStateString";
-import { TimerForm } from "../../timerForm/component/TimerForm";
+import { createPomodoroText } from "../util/createPomodoroText";
 import { Button } from "~/components/ui/button";
 import { SegmentDisplay } from "~/components/parts/SegmentDisplay/SegmentDisplay";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { cn } from "~/lib/utils";
 
 export default function Timer() {
@@ -16,6 +15,10 @@ export default function Timer() {
         resetTimer,
         pomodoroTimesInSecond,
     } = usePomodoroTimer();
+
+    const pomodoroText = useMemo(() => {
+        return createPomodoroText(timer);
+    }, [timer]);
 
     // biome-ignore lint: useExhaustiveDependencies
     useEffect(() => {
@@ -51,7 +54,7 @@ export default function Timer() {
 
     return (
         <div className="flex flex-col justify-center items-center gap-5">
-            <div className="text-4xl font-bold">pomodoro</div>
+            <div className="text-4xl font-bold">{pomodoroText}</div>
             <div className="flex items-center h-[250px]">
                 <SegmentDisplay value={countToMinute(timer.count)} timer={timer} />
                 <div className={colonClassName}>:</div>

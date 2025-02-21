@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useAtom } from "jotai";
 import { timerAtom } from "~/atom/atoms";
-import usePomodoro from "~/features/pomodoro/hooks/usePomodoro";
+import usePomodoro from "~/features/Pomodoro/hooks/usePomodoro";
 
 const usePomodoroTimer =() => {
     const [timer, setTimer] = useAtom(timerAtom);
@@ -50,8 +50,6 @@ const usePomodoroTimer =() => {
     return {
         timer,
         setTimer,
-        setFocusTime,
-        setRestTime,
         startTimer,
         stopTimer,
         resetTimer,
