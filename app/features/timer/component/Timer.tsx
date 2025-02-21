@@ -67,7 +67,6 @@ export default function Timer() {
 				<div className={colonClassName}>:</div>
 				<SegmentDisplay value={countToSecond(timer.count)} timer={timer} />
 			</div>
-			{/* TODO: リセット時とストップ時にトーストを表示する */}
 			<div>
 				{timer.paused ? (
 					<TimerButton onClick={startTimer} text='START' />
