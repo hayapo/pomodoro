@@ -4,16 +4,16 @@
 
 html,
 body {
-  @apply bg-white dark:bg-black;
+	@apply bg-white dark:bg-black;
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-    color: white;
-  }
+	@media (prefers-color-scheme: dark) {
+		color-scheme: dark;
+		color: white;
+	}
 }
 
 @layer base {
-  :root {
-    --radius: 0.5rem;
-  }
+	:root {
+		--radius: 0.5rem;
+	}
 }

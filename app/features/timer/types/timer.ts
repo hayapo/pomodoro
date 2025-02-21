@@ -1,1 +1,1 @@
-export type TimerState = "notStarted" | "started" | "stopped";
+export type TimerState = 'notStarted' | 'started' | 'stopped';

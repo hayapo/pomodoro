@@ -1,1 +1,1 @@
-export type PomodoroState = "focus" | "rest";
+export type PomodoroState = 'focus' | 'rest';

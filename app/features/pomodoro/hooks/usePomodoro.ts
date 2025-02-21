@@ -1,18 +1,16 @@
-import { useAtom, useAtomValue } from "jotai";
-import { focusTimeAtom, pomodoroStateAtom, pomodoroTimesInSecondAtom, restTimeAtom } from "~/atom/atoms";
+import { useAtom, useAtomValue } from 'jotai';
+import { pomodoroTimesAtom } from '~/features/Pomodoro/states/pomodoroTimesAtom';
+import { pomodoroTimesInSecondAtom } from '../states/pomodoroTimesInSecondAtom';
 
 const usePomodoro = () => {
-    const [focusTime, setFocusTime] = useAtom(focusTimeAtom);
-    const [restTime, setRestTime] = useAtom(restTimeAtom);
-    const pomodoroTimesInSecond = useAtomValue(pomodoroTimesInSecondAtom);
+	const [pomodoroTimes, setPomodoroTimes] = useAtom(pomodoroTimesAtom);
+	const pomodoroTimesInSecond = useAtomValue(pomodoroTimesInSecondAtom);
 
-    return {
-        focusTime,
-        setFocusTime,
-        restTime,
-        setRestTime,
-        pomodoroTimesInSecond,
-    };
+	return {
+		pomodoroTimes,
+		setPomodoroTimes,
+		pomodoroTimesInSecond,
+	};
 };
 
 export default usePomodoro;
