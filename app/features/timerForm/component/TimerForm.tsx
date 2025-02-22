@@ -16,10 +16,10 @@ import {
 	FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import usePomodoro from '~/features/Pomodoro/hooks/usePomodoro';
-import usePomodoroTimer from '~/features/Timer/hooks/usePomodoroTimer';
-import { showPomodoroTextAtom } from '~/features/Timer/states/showPomodoroTextAtom';
+import usePomodoro from '~/features/pomodoro/hooks/usePomodoro';
+import usePomodoroTimer from '~/features/timer/hooks/usePomodoroTimer';
 import { outlineStyle } from '~/lib/utils';
+import { showPomodoroTextAtom } from '~/features/timer/states/showPomodoroTextAtom';
 
 const MIN_COUNT_WARNING = 'タイマーのカウントは1分以上である必要があります';
 const MAX_COUNT_WARNING = 'タイマーのカウントは60分以下である必要があります';

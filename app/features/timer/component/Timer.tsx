@@ -1,10 +1,10 @@
 import { useAtomValue } from 'jotai';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { Button } from '~/components/ui/button';
 import usePomodoroTimer from '../hooks/usePomodoroTimer';
 import { showPomodoroTextAtom } from '../states/showPomodoroTextAtom';
 import { usePomodoroText } from '../hooks/usePomodoroText';
-import { TimerDisplay } from '~/features/SegmentDisplay/components/TimerDisplay/TimerDisplay';
+import { TimerDisplay } from '~/features/segmentDisplay/components/TimerDisplay/TimerDisplay';
 
 export default function Timer() {
 	const {

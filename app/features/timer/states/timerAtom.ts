@@ -1,7 +1,7 @@
 import { atom, type SetStateAction } from "jotai";
 import { atomWithDefault } from "jotai/utils";
-import { pomodoroTimesAtom } from "~/features/Pomodoro/states/pomodoroTimesAtom";
-import type { PomodoroState } from "~/features/Pomodoro/types/pomodoro";
+import { pomodoroTimesAtom } from "~/features/pomodoro/states/pomodoroTimesAtom";
+import type { PomodoroState } from "~/features/pomodoro/types/pomodoroState";
 
 export type TimerState = {
     paused: boolean;

@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import { useCallback } from 'react';
-import usePomodoro from '~/features/Pomodoro/hooks/usePomodoro';
+import usePomodoro from '~/features/pomodoro/hooks/usePomodoro';
 import { timerAtom } from '../states/timerAtom';
 import { toast } from 'sonner';
 

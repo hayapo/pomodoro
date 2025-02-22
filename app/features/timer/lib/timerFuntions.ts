@@ -1,7 +1,6 @@
 export function createDisplayCount(timeSecond: number) {
 	const minute = toTwoOrderNumber(Math.floor((timeSecond % 3600) / 60));
 	const second = toTwoOrderNumber(timeSecond % 60);
-	// return `${toTwoOrderNumber(minute)}:${toTwoOrderNumber(second)}`;
 	return { minute, second };
 }
 

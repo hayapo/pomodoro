@@ -1,11 +1,11 @@
-import { countToMinute, countToSecond } from "~/features/Timer/lib/timerFuntions";
+import { countToMinute, countToSecond } from "~/features/timer/lib/timerFuntions";
 import { TwoDigitDisplay } from "../TowDigitDisplay/TwoDigitDisplay";
-import usePomodoroTimer from "~/features/Timer/hooks/usePomodoroTimer";
+import usePomodoroTimer from "~/features/timer/hooks/usePomodoroTimer";
 import clsx from "clsx";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import { cn } from "~/lib/utils";
 import { useMemo } from "react";
-import type { TimerState } from "~/features/Timer/states/timerAtom";
+import type { TimerState } from "~/features/timer/states/timerAtom";
 
 export function TimerDisplay() {
 	const { timer } = usePomodoroTimer();

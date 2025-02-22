@@ -1,7 +1,6 @@
-import { timerAtom, type TimerState } from '~/features/Timer/states/timerAtom';
+import type { TimerState } from '~/features/timer/states/timerAtom';
 import { showPomodoroTextAtom } from '../states/showPomodoroTextAtom';
 import { useAtomValue } from 'jotai';
-import { useCallback } from 'react';
 
 export const usePomodoroText = (timer: TimerState) => {
 	const showPomodoroText = useAtomValue(showPomodoroTextAtom);

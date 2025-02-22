@@ -1,5 +1,5 @@
-import Timer from "~/features/Timer/component/Timer";
-import { TimerFormDrawer } from "~/features/TimerForm/component/TimerFormDrawer";
+import Timer from "~/features/timer/component/Timer";
+import { TimerFormDrawer } from "~/features/timerForm/component/TimerFormDrawer";
 
 export function Page() {
 return (
