@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import { cn } from "~/lib/utils";
 import { useMemo } from "react";
+import type { TimerState } from "~/features/Timer/states/timerAtom";
 
 export function TimerDisplay() {
 	const { timer } = usePomodoroTimer();
@@ -28,16 +29,27 @@ export function TimerDisplay() {
 		teal: !timer.paused && timer.pomodoroState === 'rest',
 		white: timer.paused,
 	});
-	const colonClassName = cn('text-6xl sm:text-8xl lg:text-9xl font-bold', {
-		'text-seggreen': !timer.paused && timer.pomodoroState === 'focus',
-		'text-segblue': !timer.paused && timer.pomodoroState === 'rest',
-		'text-white': timer.paused,
-	});
 	return (
-		<div className={`flex items-center h-[${computedHeight}px]`} >
+		<div className='flex items-center h-[150px] md:h-[200px] lg:h-[300px]' >
 			<TwoDigitDisplay value={countToMinute(timer.count)} color={color} height={computedHeight} />
-			<div className={colonClassName}>:</div>
+			<Colon timer={timer} />
 			<TwoDigitDisplay value={countToSecond(timer.count)} color={color} height={computedHeight} />
+		</div>
+	)
+};
+
+function Colon({ timer }: { timer: TimerState }) {
+	const colonSize = clsx('size-[10px] md:size-[15px] lg:size-[20px]')
+	const colonColor = cn({
+		'seggreen': !timer.paused && timer.pomodoroState === 'focus',
+		'segblue': !timer.paused && timer.pomodoroState === 'rest',
+		'white': timer.paused,
+	});
+	const className = clsx(colonSize, `bg-${colonColor}`)
+	return (
+		<div className="flex flex-col gap-5 md:gap-8 lg:gap-11 rotate-[3.5deg] mt-2 sm:mt-0">
+			<div className={className} />
+			<div className={className} />
 		</div>
 	)
 }

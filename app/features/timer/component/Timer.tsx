@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { Button } from '~/components/ui/button';
 import usePomodoroTimer from '../hooks/usePomodoroTimer';
 import { showPomodoroTextAtom } from '../states/showPomodoroTextAtom';
-import { createPomodoroText } from '../util/createPomodoroText';
+import { usePomodoroText } from '../hooks/usePomodoroText';
 import { TimerDisplay } from '~/features/SegmentDisplay/components/TimerDisplay/TimerDisplay';
 
 export default function Timer() {
@@ -17,10 +17,7 @@ export default function Timer() {
 	} = usePomodoroTimer();
 
 	const showPomodoroText = useAtomValue(showPomodoroTextAtom);
-	const pomodoroText = useMemo(() => {
-		return createPomodoroText(timer);
-	}, [timer]);
-
+	const pomodoroText = usePomodoroText(timer);
 	// biome-ignore lint: useExhaustiveDependencies
 	useEffect(() => {
 		const timerId = setInterval(() => {
@@ -46,8 +43,10 @@ export default function Timer() {
 
 	return (
 		<div className='flex flex-col justify-center items-center gap-5'>
-			{showPomodoroText && (
-				<div className='text-3xl md:text-4xl font-bold'>{pomodoroText}</div>
+			{pomodoroText && showPomodoroText ? (
+				<div className='h-[20px] sm:h-[50px] xl:h-[70px] flex items-center text-3xl md:text-5xl font-bold text-center'>{pomodoroText}</div>
+			) : (
+				<div className='h-[20px] sm:h-[50px] xl:h-[70px] text-3xl md:text-5xl' />
 			)}
 			<TimerDisplay />
 			<div>
