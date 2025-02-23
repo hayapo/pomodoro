@@ -10,6 +10,9 @@ declare module "@remix-run/node" {
 }
 
 export default defineConfig({
+	esbuild: {
+		drop: ['console', 'debugger'],
+	},
   plugins: [
     remix({
       future: {
