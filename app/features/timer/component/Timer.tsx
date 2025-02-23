@@ -1,10 +1,11 @@
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
-import { Button } from '~/components/ui/button';
 import usePomodoroTimer from '../hooks/usePomodoroTimer';
 import { usePomodoroText } from '../hooks/usePomodoroText';
 import { TimerDisplay } from '~/features/segmentDisplay/components/TimerDisplay/TimerDisplay';
 import { settingsAtom } from '~/features/customize/states/settingsAtom';
+import { TimerButton } from './TimerButton';
+import { TooltipProvider } from '~/components/ui/tooltip';
 
 export default function Timer() {
 	const {
@@ -42,30 +43,14 @@ export default function Timer() {
 				<div className='h-[20px] sm:h-[50px] xl:h-[70px] text-3xl md:text-5xl' />
 			)}
 			<TimerDisplay />
-			<div>
+			<div className='flex flex-col sm:flex-row gap-8'>
 				{timer.paused ? (
-					<TimerButton onClick={startTimer} text='START' />
+					<TimerButton onClick={startTimer} text='START' tooltipText='タイマーを開始する'/>
 				) : (
-					<TimerButton onClick={stopTimer} text='STOP' />
+					<TimerButton onClick={stopTimer} text='STOP' tooltipText='タイマーを停止する' />
 				)}
+				<TimerButton onClick={resetTimer} text='RESET' tooltipText='現在の集中/休憩状態のまま、タイマーをリセットする' />
 			</div>
-			<TimerButton onClick={resetTimer} text='RESET' />
 		</div>
 	);
-}
-
-function TimerButton(props: {
-	onClick: () => void;
-	text: string;
-}) {
-	return (
-		<Button
-			variant='secondary'
-			type='button'
-			onClick={props.onClick}
-			className='w-[150px] text-3xl p-8 focus-visible:outline-4 focus-visible:outline-seggreen focus-visible:ring-0'
-		>
-			{props.text}
-		</Button>
-	);
-}
+};
