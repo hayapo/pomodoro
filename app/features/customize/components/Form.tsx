@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Checkbox } from '~/components/ui/checkbox';
 import {
-	Form,
+	Form as _Form,
 	FormControl,
 	FormDescription,
 	FormField,
@@ -16,18 +16,20 @@ import {
 	FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import usePomodoro from '~/features/pomodoro/hooks/usePomodoro';
 import usePomodoroTimer from '~/features/timer/hooks/usePomodoroTimer';
 import { outlineStyle } from '~/lib/utils';
-import { showPomodoroTextAtom } from '~/features/timer/states/showPomodoroTextAtom';
+import { settingsAtom } from '~/features/customize/states/settingsAtom';
+import clsx from 'clsx';
+import { Switch } from '~/components/ui/switch';
 
 const MIN_COUNT_WARNING = 'タイマーのカウントは1分以上である必要があります';
 const MAX_COUNT_WARNING = 'タイマーのカウントは60分以下である必要があります';
 
 export const formValues = z.object({
+	focusMinute: z.coerce.number().min(1, MIN_COUNT_WARNING).max(60, MAX_COUNT_WARNING),
+	restMinute: z.coerce.number().min(1, MIN_COUNT_WARNING).max(60, MAX_COUNT_WARNING),
 	showPomodoroText: z.coerce.boolean(),
-	focus: z.coerce.number().min(1, MIN_COUNT_WARNING).max(60, MAX_COUNT_WARNING),
-	rest: z.coerce.number().min(1, MIN_COUNT_WARNING).max(60, MAX_COUNT_WARNING),
+	shouldSendNotification: z.coerce.boolean(),
 });
 
 export type IFormValues = z.infer<typeof formValues>;
@@ -36,45 +38,76 @@ type Props = {
 	setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export function TimerForm({ setOpen }: Props) {
-	const { pomodoroTimes, setPomodoroTimes } = usePomodoro();
+export function Form({ setOpen }: Props) {
 	const { setTimer } = usePomodoroTimer();
-	const [showPomodoroText, setShowPomodoroText] = useAtom(showPomodoroTextAtom);
+	const [settings, setSettings] = useAtom(settingsAtom);
 	const form = useForm<IFormValues>({
 		resolver: zodResolver(formValues),
 		defaultValues: {
-			showPomodoroText: showPomodoroText,
-			focus: pomodoroTimes.focus,
-			rest: pomodoroTimes.rest,
+			showPomodoroText: settings.showPomodoroText,
+			shouldSendNotification: settings.shouldSendNotification,
+			focusMinute: settings.focusMinute,
+			restMinute: settings.restMinute,
 		},
 	});
 
 	const onSubmit: SubmitHandler<IFormValues> = (data: IFormValues) => {
-		setPomodoroTimes({
-			focus: data.focus,
-			rest: data.rest,
-		});
-		setTimer({
-			paused: true,
-			pomodoroState: 'focus',
-			count: data.focus,
-		});
-		setShowPomodoroText(data.showPomodoroText);
+		const prevSettings = settings;
+		setSettings({
+			showPomodoroText: data.showPomodoroText,
+			shouldSendNotification: data.shouldSendNotification,
+			focusMinute: data.focusMinute,
+			restMinute: data.restMinute,
+		})
+		if (settings.focusMinute !== data.focusMinute || settings.restMinute !== data.restMinute) {
+			setTimer({
+				paused: true,
+				pomodoroState: 'focus',
+				count: data.focusMinute,
+			});
+		}
 		setOpen(false);
-		toast('カスタマイズを登録しました')
+		toast('カスタマイズを登録しました', {
+			action: {
+				label: '戻す',
+				onClick: () => {
+					setSettings(prevSettings);
+					toast('カスタマイズを元に戻しました');
+				}
+			}
+		})
 	};
 
 	return (
-		<Form {...form}>
+		<_Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className='mx-auto'>
 				<div className='flex flex-col gap-4'>
+				<FormField
+						control={form.control}
+						name='shouldSendNotification'
+						render={({ field }) => (
+							<FormItem className='flex flex-row items-start space-x-3 space-y-0'>
+								<FormControl>
+									<Switch
+										className={outlineStyle}
+										checked={field.value}
+										onCheckedChange={field.onChange}
+									/>
+								</FormControl>
+								<div className='space-y-1 leading-none'>
+									<FormLabel>通知を送信する</FormLabel>
+									<FormDescription>タイマーの切り替わり時に通知を送信する</FormDescription>
+								</div>
+							</FormItem>
+						)}
+					/>
 					<FormField
 						control={form.control}
 						name='showPomodoroText'
 						render={({ field }) => (
 							<FormItem className='flex flex-row items-start space-x-3 space-y-0'>
 								<FormControl>
-									<Checkbox
+									<Switch
 										className={outlineStyle}
 										checked={field.value}
 										onCheckedChange={field.onChange}
@@ -88,34 +121,34 @@ export function TimerForm({ setOpen }: Props) {
 					/>
 					<FormField
 						control={form.control}
-						name='focus'
+						name='focusMinute'
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>集中する時間 (min) をカスタマイズ</FormLabel>
 								<FormControl>
 									<Input className={outlineStyle} placeholder='25' {...field} />
 								</FormControl>
-								{form.formState.errors.focus ? (
+								{form.formState.errors.focusMinute ? (
 									<FormMessage />
 								) : (
-									<FormDescription>分単位（1~60）</FormDescription>
+									<FormDescription>分単位: 1 ~ 60</FormDescription>
 								)}
 							</FormItem>
 						)}
 					/>
 					<FormField
 						control={form.control}
-						name='rest'
+						name='restMinute'
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>休憩する時間 (min) をカスタマイズ</FormLabel>
 								<FormControl>
 									<Input className={outlineStyle} placeholder='25' {...field} />
 								</FormControl>
-								{form.formState.errors.rest ? (
+								{form.formState.errors.restMinute ? (
 									<FormMessage />
 								) : (
-									<FormDescription>分単位（1~60）</FormDescription>
+									<FormDescription>分単位: 1 ~ 60</FormDescription>
 								)}
 							</FormItem>
 						)}
@@ -125,6 +158,6 @@ export function TimerForm({ setOpen }: Props) {
 					</Button>
 				</div>
 			</form>
-		</Form>
+		</_Form>
 	);
 }

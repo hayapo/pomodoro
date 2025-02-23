@@ -2,9 +2,9 @@ import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { Button } from '~/components/ui/button';
 import usePomodoroTimer from '../hooks/usePomodoroTimer';
-import { showPomodoroTextAtom } from '../states/showPomodoroTextAtom';
 import { usePomodoroText } from '../hooks/usePomodoroText';
 import { TimerDisplay } from '~/features/segmentDisplay/components/TimerDisplay/TimerDisplay';
+import { settingsAtom } from '~/features/customize/states/settingsAtom';
 
 export default function Timer() {
 	const {
@@ -15,16 +15,16 @@ export default function Timer() {
 		resetTimer,
 		startNextPomodoro,
 	} = usePomodoroTimer();
-
-	const showPomodoroText = useAtomValue(showPomodoroTextAtom);
 	const pomodoroText = usePomodoroText(timer);
+	const { showPomodoroText, shouldSendNotification } = useAtomValue(settingsAtom);
+	console.log(timer.count);
 	// biome-ignore lint: useExhaustiveDependencies
 	useEffect(() => {
 		const timerId = setInterval(() => {
 			setTimer((prev) => {
 				if (prev.paused) return prev;
 				return prev.count === 0
-					? startNextPomodoro(prev)
+					? startNextPomodoro(prev, shouldSendNotification)
 					: {
 							...prev,
 							count: prev.count - 1,

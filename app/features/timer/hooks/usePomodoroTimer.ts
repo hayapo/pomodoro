@@ -1,10 +1,11 @@
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
 import usePomodoro from '~/features/pomodoro/hooks/usePomodoro';
 import { timerAtom, type TimerState } from '../states/timerAtom';
 import { toast } from 'sonner';
 import { SITE_NAME } from '~/constants';
 import { useNotification } from '~/features/notification/hooks/useNotification';
+import clsx from 'clsx';
 
 const usePomodoroTimer = () => {
 	const [timer, setTimer] = useAtom(timerAtom);
@@ -56,11 +57,11 @@ const usePomodoroTimer = () => {
 		[setTimer, pomodoroTimesInSecond],
 	);
 
-	const startNextPomodoro = useCallback((prevTimer: TimerState): TimerState => {
+	const startNextPomodoro = useCallback((prevTimer: TimerState, shouldSendNotification: boolean): TimerState => {
 		const nextPomodoroState = prevTimer.pomodoroState === 'focus' ? 'rest' : 'focus';
 		const currentTime = new Date().getTime();
 		const { sendNotification } = useNotification();
-		sendNotification(
+		shouldSendNotification && sendNotification(
 			{
 				title: SITE_NAME,
 				body: nextPomodoroState === 'focus' ? '集中する時間です' : '休憩する時間です',

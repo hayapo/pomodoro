@@ -1,19 +1,19 @@
 import { atom, type SetStateAction } from "jotai";
 import { atomWithDefault } from "jotai/utils";
-import { pomodoroTimesAtom } from "~/features/pomodoro/states/pomodoroTimesAtom";
+import { settingsAtom } from "~/features/customize/states/settingsAtom";
 import type { PomodoroState } from "~/features/pomodoro/types/pomodoroState";
 
 export type TimerState = {
-    paused: boolean;
-    pomodoroState: PomodoroState;
-    count: number;
+	paused: boolean;
+	pomodoroState: PomodoroState;
+	count: number;
 };
 
 const _timerAtom = atomWithDefault<TimerState>(
 	(get) => ({
     paused: true,
     pomodoroState: 'focus',
-    count: get(pomodoroTimesAtom).focus * 60,
+    count: get(settingsAtom).focusMinute * 60,
 	})
 );
 

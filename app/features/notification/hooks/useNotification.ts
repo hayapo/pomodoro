@@ -27,7 +27,7 @@ export const useNotification = () => {
 		},
 		tag: string
 	) => {
-		function atNotificationShowed() {
+		function onNotificationShowed() {
 			console.log('notification has sent');
 		}
 		if ('Notification' in window) {
@@ -35,8 +35,8 @@ export const useNotification = () => {
 				body: message.body,
 				tag: tag,
 			});
-			notification.addEventListener('show', atNotificationShowed)
-			return notification.removeEventListener('show', atNotificationShowed)
+			notification.addEventListener('show', onNotificationShowed)
+			return notification.removeEventListener('show', onNotificationShowed)
 		}
 		return;
 	}

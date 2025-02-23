@@ -12,9 +12,9 @@ import {
 	DrawerTrigger,
 } from '~/components/ui/drawer';
 import { outlineStyle } from '~/lib/utils';
-import { TimerForm } from './TimerForm';
+import { Form } from './Form';
 
-export function TimerFormDrawer() {
+export function FormDrawer() {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -30,13 +30,13 @@ export function TimerFormDrawer() {
 			<DrawerContent>
 				<div className='mx-auto w-full max-w-sm'>
 					<DrawerHeader>
-						<DrawerTitle>タイマーをカスタマイズする</DrawerTitle>
+						<DrawerTitle>設定をカスタマイズする</DrawerTitle>
 						<DrawerDescription>
-							集中する時間と休憩する時間を分単位でカスタマイズすることができます
+							通知送信の有無、表示テキストの表示/非表示、集中する時間と休憩する時間をカスタマイズすることができます
 						</DrawerDescription>
 					</DrawerHeader>
 					<div className='p-4'>
-						<TimerForm setOpen={setOpen} />
+						<Form setOpen={setOpen} />
 					</div>
 					<DrawerFooter>
 						<DrawerClose asChild>
