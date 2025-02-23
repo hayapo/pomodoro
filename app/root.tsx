@@ -14,20 +14,22 @@ export const links: LinksFunction = () => [{ rel: 'stylesheet', href: sytles }];
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang='ja'>
+		<html lang='ja' data-theme='dark'>
 			<head>
 				<meta charSet='utf-8' />
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 				<Meta />
 				<Links />
 			</head>
-			<body className='h-[calc(100svh-60px)] w-screen-xl w-full'>
+			<body className='h-lvh'>
 				<h1 className='h-[60px] px-4 py-2 text-3xl font-bold'>Pomodoro Timer</h1>
-				{children}
-				<ScrollRestoration />
-				<Scripts />
-				<Toaster />
-				<Notification />
+				<main className='h-[calc(100lvh-60px)] w-screen-xl w-full'>
+					{children}
+					<ScrollRestoration />
+					<Scripts />
+					<Toaster />
+					<Notification />
+				</main>
 			</body>
 		</html>
 	);
