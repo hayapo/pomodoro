@@ -1,3 +1,5 @@
+import { SITE_NAME } from "~/constants";
+
 export const useNotification = () => {
 	const requestPermission = () => {
 		if ('Notification' in window) {
@@ -11,8 +13,8 @@ export const useNotification = () => {
 					(permission) => {
 					if (permission === 'granted') {
 						console.log('Notification permission granted.');
-						new Notification('test', {
-							body: 'test'
+						new Notification(SITE_NAME, {
+							body: 'このサイトから通知を送信します。\n正しく通知を受け取るために、OS設定からお使いのブラウザの通知を許可してください'
 						});
 					}
 				}
