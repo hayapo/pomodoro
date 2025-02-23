@@ -1,8 +1,10 @@
 import { useAtom } from 'jotai';
 import { useCallback } from 'react';
 import usePomodoro from '~/features/pomodoro/hooks/usePomodoro';
-import { timerAtom } from '../states/timerAtom';
+import { timerAtom, type TimerState } from '../states/timerAtom';
 import { toast } from 'sonner';
+import { SITE_NAME } from '~/constants';
+import { useNotification } from '~/features/notification/hooks/useNotification';
 
 const usePomodoroTimer = () => {
 	const [timer, setTimer] = useAtom(timerAtom);
@@ -54,12 +56,33 @@ const usePomodoroTimer = () => {
 		[setTimer, pomodoroTimesInSecond],
 	);
 
+	const startNextPomodoro = useCallback((prevTimer: TimerState): TimerState => {
+		const nextPomodoroState = prevTimer.pomodoroState === 'focus' ? 'rest' : 'focus';
+		const currentTime = new Date().getTime();
+		const { sendNotification } = useNotification();
+		sendNotification(
+			{
+				title: SITE_NAME,
+				body: nextPomodoroState === 'focus' ? '集中する時間です' : '休憩する時間です',
+			},
+			`${nextPomodoroState}=${currentTime}`
+	)
+		return ({
+			...prevTimer,
+			pomodoroState: nextPomodoroState,
+			count: nextPomodoroState === 'focus' 
+				? pomodoroTimesInSecond.focus
+				: pomodoroTimesInSecond.rest,
+		});
+	}, [pomodoroTimesInSecond])
+
 	return {
 		timer,
 		setTimer,
 		startTimer,
 		stopTimer,
 		resetTimer,
+		startNextPomodoro,
 		pomodoroTimesInSecond,
 	};
 };

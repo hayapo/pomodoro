@@ -1,9 +1,10 @@
 import type { MetaFunction } from '@remix-run/node';
 import { Page } from '~/components/pages/top/Page';
+import { SITE_NAME } from '~/constants';
 
 export const meta: MetaFunction = () => {
 	return [
-		{ title: 'Segment Pomodoro Timer' },
+		{ title: SITE_NAME },
 		{
 			name: 'description',
 			content:

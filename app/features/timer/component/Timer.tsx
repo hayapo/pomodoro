@@ -13,7 +13,7 @@ export default function Timer() {
 		startTimer,
 		stopTimer,
 		resetTimer,
-		pomodoroTimesInSecond,
+		startNextPomodoro,
 	} = usePomodoroTimer();
 
 	const showPomodoroText = useAtomValue(showPomodoroTextAtom);
@@ -24,14 +24,7 @@ export default function Timer() {
 			setTimer((prev) => {
 				if (prev.paused) return prev;
 				return prev.count === 0
-					? {
-							...prev,
-							pomodoroState: prev.pomodoroState === 'focus' ? 'rest' : 'focus',
-							count:
-								prev.pomodoroState === 'focus'
-									? pomodoroTimesInSecond.rest
-									: pomodoroTimesInSecond.focus,
-						}
+					? startNextPomodoro(prev)
 					: {
 							...prev,
 							count: prev.count - 1,

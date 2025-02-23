@@ -8,6 +8,7 @@ import {
 } from '@remix-run/react';
 import sytles from './tailwind.css?url';
 import { Toaster } from './components/ui/sonner';
+import { Notification } from './features/notification/components/Notification';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: sytles }];
 
@@ -26,6 +27,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<ScrollRestoration />
 				<Scripts />
 				<Toaster />
+				<Notification />
 			</body>
 		</html>
 	);
