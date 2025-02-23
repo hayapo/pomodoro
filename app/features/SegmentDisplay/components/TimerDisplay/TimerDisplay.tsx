@@ -41,11 +41,11 @@ export function TimerDisplay() {
 function Colon({ timer }: { timer: TimerState }) {
 	const colonSize = clsx('size-[10px] md:size-[15px] lg:size-[20px]')
 	const colonColor = cn({
-		'seggreen': !timer.paused && timer.pomodoroState === 'focus',
-		'segblue': !timer.paused && timer.pomodoroState === 'rest',
-		'white': timer.paused,
+		'bg-seggreen': !timer.paused && timer.pomodoroState === 'focus',
+		'bg-segblue': !timer.paused && timer.pomodoroState === 'rest',
+		'bg-white': timer.paused,
 	});
-	const className = clsx(colonSize, `bg-${colonColor}`)
+	const className = clsx(colonSize, colonColor)
 	return (
 		<div className="flex flex-col gap-5 md:gap-8 lg:gap-11 rotate-[3.5deg] mt-2 sm:mt-0">
 			<div className={className} />
