@@ -117,7 +117,10 @@ export function Form({ setOpen }: Props) {
 								</FormControl>
 								<div className='space-y-1 leading-none'>
 									<FormLabel>通知音を再生する</FormLabel>
-									<FormDescription>タイマーの切り替わり時に通知音を再生する</FormDescription>
+									<FormDescription className='flex flex-col gap-1'>
+										<span>タイマーの切り替わり時に通知音を再生する</span>
+										<span className='text-red-500'>※ 音量調整機能は実装中のため、大きい音が鳴ります。注意して使用してください</span> 
+									</FormDescription>
 								</div>
 							</FormItem>
 						)}
@@ -135,7 +138,8 @@ export function Form({ setOpen }: Props) {
 									/>
 								</FormControl>
 								<div className='space-y-1 leading-none'>
-									<FormLabel>「作業中・休憩中」のテキストを表示する</FormLabel>
+									<FormLabel>集中/休憩状態を示すテキストを表示する</FormLabel>
+									<FormDescription>タイマーの上に「モクモク中 💭 / 休憩中 😌」というテキストを表示して、現在の集中/休憩状態をわかりやすくすることができます</FormDescription>
 								</div>
 							</FormItem>
 						)}
