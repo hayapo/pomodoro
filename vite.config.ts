@@ -1,4 +1,4 @@
-import { vitePlugin as remix } from "@remix-run/dev";
+import { vitePlugin as remix, cloudflareDevProxyVitePlugin } from "@remix-run/dev";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import path from "node:path";
@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => {
 				},
 			}),
 			tsconfigPaths(),
+			cloudflareDevProxyVitePlugin(),
 		],
 		resolve: {
 			alias: {
