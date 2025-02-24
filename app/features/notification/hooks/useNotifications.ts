@@ -1,6 +1,6 @@
 import { SITE_NAME } from "~/constants";
 
-export const useNotification = () => {
+export const useNotifications = () => {
 	const requestPermission = () => {
 		if ('Notification' in window) {
 			const permission = Notification.permission;
@@ -29,21 +29,21 @@ export const useNotification = () => {
 		},
 		tag: string
 	) => {
-		function onNotificationShowed() {
-			console.log('notification has sent');
-		}
 		if ('Notification' in window) {
 			const notification = new Notification(message.title, {
 				body: message.body,
 				tag: tag,
 			});
-			notification.addEventListener('show', onNotificationShowed)
-			return notification.removeEventListener('show', onNotificationShowed)
 		}
-		return;
-	}
+	};
+
+	const playNotificationSound = () => {
+		new Audio('./pigeon-clock.mp3').play();
+	};
+
 	return {
 		requestPermission,
 		sendNotification,
+		playNotificationSound,
 	}
 }

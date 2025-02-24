@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useNotification } from "../hooks/useNotification";
+import { useNotifications } from "../hooks/useNotifications";
 
 export function Notification() {
-	const { requestPermission } = useNotification();
+	const { requestPermission } = useNotifications();
 	useEffect(() => {
 		requestPermission();
 	},
