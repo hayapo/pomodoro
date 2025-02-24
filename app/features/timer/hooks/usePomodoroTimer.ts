@@ -6,15 +6,14 @@ import type { PomodoroState } from "~/features/pomodoro/types/pomodoroState";
 import { SITE_NAME } from "~/constants";
 import { toast } from "sonner";
 import { useNotifications } from "~/features/notification/hooks/useNotifications";
+import type { PomodoroTimesInSecondState } from "~/features/pomodoro/states/pomodoroTimesInSecondAtom";
 
 /**
- * @param focusSeconds 集中モードの秒数(例: 25分なら1500)
- * @param restSeconds  休憩モードの秒数(例: 5分なら300)
- * @param settings     通知や音などの設定
+ * @param pomodoroTimesInSecond	集中/休憩分数を秒にしたもの
+ * @param settings							通知や音などの設定
  */
 export const usePomodoroTimer = (
-	focusSeconds: number,
-	restSeconds: number,
+	pomodoroTimesInSecond: PomodoroTimesInSecondState,
 	settings: Settings,
 ) => {
 	const [timer, setTimer] = useAtom(timerAtom);
@@ -29,11 +28,10 @@ export const usePomodoroTimer = (
 				}
 				if (prev.count <= 0) {
 					const nextPomodoroState = prev.pomodoroState === 'focus' ? 'rest' : 'focus';
-					const nextCount = prev.pomodoroState === 'focus' ? restSeconds : focusSeconds;
 					return {
 						...prev,
 						pomodoroState: nextPomodoroState,
-						count: nextCount,
+						count: pomodoroTimesInSecond[nextPomodoroState],
 					};
 				}
 				return {
@@ -43,7 +41,7 @@ export const usePomodoroTimer = (
 			});
 		}, 1000);
 		return () => clearInterval(timerId);
-	}, [focusSeconds, restSeconds]);
+	}, [pomodoroTimesInSecond]);
 
 	const prevStateRef = useRef<PomodoroState>(timer.pomodoroState);
 	//biome-ignore lint:
@@ -82,7 +80,7 @@ export const usePomodoroTimer = (
 
 	const reset = useCallback(() => {
 		setTimer((prev) => {
-			const defaultCount = prev.pomodoroState === 'focus' ? focusSeconds : restSeconds;
+			const defaultCount = prev.pomodoroState === 'focus' ? pomodoroTimesInSecond.focus : pomodoroTimesInSecond.rest;
 			return {
 				...prev,
 				paused: true,
@@ -90,7 +88,7 @@ export const usePomodoroTimer = (
 			}
 		});
 		toast('タイマーをリセットしました');
-	}, [setTimer, focusSeconds, restSeconds]);
+	}, [setTimer, pomodoroTimesInSecond]);
 
 	return {
 		timer,

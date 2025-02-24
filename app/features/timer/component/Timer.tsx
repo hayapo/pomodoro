@@ -9,7 +9,7 @@ import { pomodoroTimesInSecondAtom } from '~/features/pomodoro/states/pomodoroTi
 export default function Timer() {
 	const settings = useAtomValue(settingsAtom);
 	const pomodoroTimesInSecond = useAtomValue(pomodoroTimesInSecondAtom);
-	const { timer, start, stop, reset } = usePomodoroTimer(pomodoroTimesInSecond.focus, pomodoroTimesInSecond.rest, settings);
+	const { timer, start, stop, reset } = usePomodoroTimer(pomodoroTimesInSecond, settings);
 	const { pomodoroText } = usePomodoroText();
 
 	return (
