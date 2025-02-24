@@ -1,91 +1,101 @@
-import { useAtom, useAtomValue } from 'jotai';
-import { useCallback } from 'react';
-import usePomodoro from '~/features/pomodoro/hooks/usePomodoro';
-import { timerAtom, type TimerState } from '../states/timerAtom';
-import { toast } from 'sonner';
-import { SITE_NAME } from '~/constants';
-import { useNotification } from '~/features/notification/hooks/useNotification';
-import clsx from 'clsx';
+import { useAtom } from "jotai";
+import type { Settings } from "~/features/customize/states/settingsAtom";
+import { timerAtom } from "../states/timerAtom";
+import { useCallback, useEffect, useRef } from "react";
+import type { PomodoroState } from "~/features/pomodoro/types/pomodoroState";
+import { SITE_NAME } from "~/constants";
+import { toast } from "sonner";
+import { useNotifications } from "~/features/notification/hooks/useNotifications";
 
-const usePomodoroTimer = () => {
+/**
+ * @param focusSeconds 集中モードの秒数(例: 25分なら1500)
+ * @param restSeconds  休憩モードの秒数(例: 5分なら300)
+ * @param settings     通知や音などの設定
+ */
+export const usePomodoroTimer = (
+	focusSeconds: number,
+	restSeconds: number,
+	settings: Settings,
+) => {
 	const [timer, setTimer] = useAtom(timerAtom);
-	const { pomodoroTimesInSecond } = usePomodoro();
+	const { sendNotification, playNotificationSound} = useNotifications();
 
-	const startTimer = useCallback(
-		() => {
+	//biome-ignore lint:
+	useEffect(() => {
+		const timerId = setInterval(() => {
 			setTimer((prev) => {
+				if (prev.paused) {
+					return prev;
+				}
+				if (prev.count <= 0) {
+					const nextPomodoroState = prev.pomodoroState === 'focus' ? 'rest' : 'focus';
+					const nextCount = prev.pomodoroState === 'focus' ? restSeconds : focusSeconds;
+					return {
+						...prev,
+						pomodoroState: nextPomodoroState,
+						count: nextCount,
+					};
+				}
 				return {
 					...prev,
-					paused: false,
-				};
-			})
-			toast('タイマーをスタートしました');
-		},
-		[setTimer]
-	);
-
-	const stopTimer = useCallback(
-		() => {
-			setTimer((prev) => {
-				return {
-					...prev,
-					paused: true,
+					count: prev.count - 1,
 				};
 			});
-			toast('タイマーをストップしました');
-		}, 
-		[setTimer],
-	);
+		}, 1000);
+		return () => clearInterval(timerId);
+	}, [focusSeconds, restSeconds]);
 
-	const resetTimer = useCallback(
-		() => {
-			setTimer((prev) =>
-			prev.pomodoroState === 'focus'
-				? {
-						...prev,
-						paused: true,
-						count: pomodoroTimesInSecond.focus,
-					}
-				: {
-						...prev,
-						paused: true,
-						count: pomodoroTimesInSecond.rest,
+	const prevStateRef = useRef<PomodoroState>(timer.pomodoroState);
+	//biome-ignore lint:
+	useEffect(() => {
+		const prevState = prevStateRef.current;
+		const nextState = timer.pomodoroState;
+		if (prevState !== nextState && !timer.paused) {
+			if (settings.arrowSendNotification) {
+				sendNotification(
+					{
+						title: SITE_NAME,
+						body:
+							nextState === 'focus'
+								? '集中する時間です'
+								: '休憩する時間です'
 					},
-			)
-			toast('タイマーをリセットしました')
-		},
-		[setTimer, pomodoroTimesInSecond],
-	);
+					`${nextState}-${Date.now()}`
+				)
+			}
+			if (settings.arrowPlayNotificationSound) {
+				playNotificationSound();
+			}
+		}
+		prevStateRef.current = nextState;
+	}, [timer.pomodoroState, timer.paused, settings]);
 
-	const startNextPomodoro = useCallback((prevTimer: TimerState, shouldSendNotification: boolean): TimerState => {
-		const nextPomodoroState = prevTimer.pomodoroState === 'focus' ? 'rest' : 'focus';
-		const currentTime = new Date().getTime();
-		const { sendNotification } = useNotification();
-		shouldSendNotification && sendNotification(
-			{
-				title: SITE_NAME,
-				body: nextPomodoroState === 'focus' ? '集中する時間です' : '休憩する時間です',
-			},
-			`${nextPomodoroState}=${currentTime}`
-	)
-		return ({
-			...prevTimer,
-			pomodoroState: nextPomodoroState,
-			count: nextPomodoroState === 'focus' 
-				? pomodoroTimesInSecond.focus
-				: pomodoroTimesInSecond.rest,
+	const start = useCallback(() => {
+		setTimer((prev) => ({...prev, paused: false}));
+		toast('タイマーをスタートしました');
+	}, [setTimer]);
+
+	const stop = useCallback(() => {
+		setTimer((prev) => ({...prev, paused: true}));
+		toast('タイマーをストップしました');
+	}, [setTimer]);
+
+	const reset = useCallback(() => {
+		setTimer((prev) => {
+			const defaultCount = prev.pomodoroState === 'focus' ? focusSeconds : restSeconds;
+			return {
+				...prev,
+				paused: true,
+				count: defaultCount,
+			}
 		});
-	}, [pomodoroTimesInSecond])
+		toast('タイマーをリセットしました');
+	}, [setTimer, focusSeconds, restSeconds]);
 
 	return {
 		timer,
-		setTimer,
-		startTimer,
-		stopTimer,
-		resetTimer,
-		startNextPomodoro,
-		pomodoroTimesInSecond,
-	};
-};
-
-export default usePomodoroTimer;
+		start,
+		stop,
+		reset,
+	}
+}
