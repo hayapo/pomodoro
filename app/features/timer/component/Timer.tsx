@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai';
 import { usePomodoroText } from '../hooks/usePomodoroText';
-// import { TimerDisplay } from '~/features/segmentDisplay/components/TimerDisplay/TimerDisplay';
+import { TimerDisplay } from '~/features/segmentDisplay/components/TimerDisplay';
 import { settingsAtom } from '~/features/customize/states/settingsAtom';
 import { TimerButton } from './TimerButton';
 import { usePomodoroTimer } from '../hooks/usePomodoroTimer';
@@ -19,7 +19,7 @@ export default function Timer() {
 			) : (
 				<div className='h-[20px] sm:h-[50px] xl:h-[70px] text-3xl md:text-5xl' />
 			)}
-			{/* <TimerDisplay /> */}
+			<TimerDisplay />
 			<div className='flex flex-col sm:flex-row gap-8'>
 				{timer.paused ? (
 					<TimerButton onClick={start} text='START' tooltipText='タイマーを開始する'/>
