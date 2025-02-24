@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 import { Button } from '~/components/ui/button';
 import {
 	Drawer,
@@ -13,12 +12,14 @@ import {
 } from '~/components/ui/drawer';
 import { outlineStyle } from '~/lib/utils';
 import { Form } from './Form';
+import { drawerStateAtom } from '../states/drawerStateAtom';
+import { useAtom } from 'jotai';
 
 export function FormDrawer() {
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useAtom(drawerStateAtom);
 
 	return (
-		<Drawer open={open} onOpenChange={setOpen}>
+		<Drawer open={open} onOpenChange={setOpen} autoFocus={open}>
 			<DrawerTrigger asChild>
 				<Button
 					variant='outline'

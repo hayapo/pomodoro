@@ -1,9 +1,7 @@
-import { useNotification } from "~/features/notification/hooks/useNotification";
 import Timer from "~/features/timer/component/Timer";
 import { FormDrawer } from "~/features/customize/components/FormDrawer";
 
 export function Page() {
-	useNotification();
 	return (
 		<>
 			<div className="h-full flex justify-center">

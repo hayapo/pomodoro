@@ -1,11 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type SetStateAction, useAtom } from 'jotai';
+import { type SetStateAction, useAtom, useSetAtom } from 'jotai';
 import type { Dispatch } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
-import { Checkbox } from '~/components/ui/checkbox';
 import {
 	Form as _Form,
 	FormControl,
@@ -16,11 +15,10 @@ import {
 	FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import usePomodoroTimer from '~/features/timer/hooks/usePomodoroTimer';
 import { outlineStyle } from '~/lib/utils';
 import { settingsAtom } from '~/features/customize/states/settingsAtom';
-import clsx from 'clsx';
 import { Switch } from '~/components/ui/switch';
+import { timerAtom } from '~/features/timer/states/timerAtom';
 
 const MIN_COUNT_WARNING = 'タイマーのカウントは1分以上である必要があります';
 const MAX_COUNT_WARNING = 'タイマーのカウントは60分以下である必要があります';
@@ -29,7 +27,8 @@ export const formValues = z.object({
 	focusMinute: z.coerce.number().min(1, MIN_COUNT_WARNING).max(60, MAX_COUNT_WARNING),
 	restMinute: z.coerce.number().min(1, MIN_COUNT_WARNING).max(60, MAX_COUNT_WARNING),
 	showPomodoroText: z.coerce.boolean(),
-	shouldSendNotification: z.coerce.boolean(),
+	arrowSendNofitication: z.coerce.boolean(),
+	arrowPlayNotificationSound: z.coerce.boolean(),
 });
 
 export type IFormValues = z.infer<typeof formValues>;
@@ -39,13 +38,14 @@ type Props = {
 };
 
 export function Form({ setOpen }: Props) {
-	const { setTimer } = usePomodoroTimer();
+	const setTimer = useSetAtom(timerAtom);
 	const [settings, setSettings] = useAtom(settingsAtom);
 	const form = useForm<IFormValues>({
 		resolver: zodResolver(formValues),
 		defaultValues: {
 			showPomodoroText: settings.showPomodoroText,
-			shouldSendNotification: settings.shouldSendNotification,
+			arrowSendNofitication: settings.arrowSendNotification,
+			arrowPlayNotificationSound: settings.arrowPlayNotificationSound,
 			focusMinute: settings.focusMinute,
 			restMinute: settings.restMinute,
 		},
@@ -54,11 +54,13 @@ export function Form({ setOpen }: Props) {
 	const onSubmit: SubmitHandler<IFormValues> = (data: IFormValues) => {
 		const prevSettings = settings;
 		setSettings({
+			arrowSendNotification: data.arrowSendNofitication,
+			arrowPlayNotificationSound: data.arrowPlayNotificationSound,
 			showPomodoroText: data.showPomodoroText,
-			shouldSendNotification: data.shouldSendNotification,
 			focusMinute: data.focusMinute,
 			restMinute: data.restMinute,
-		})
+		});
+		console.log(data);
 		if (settings.focusMinute !== data.focusMinute || settings.restMinute !== data.restMinute) {
 			setTimer({
 				paused: true,
@@ -84,7 +86,7 @@ export function Form({ setOpen }: Props) {
 				<div className='flex flex-col gap-4'>
 				<FormField
 						control={form.control}
-						name='shouldSendNotification'
+						name='arrowSendNofitication'
 						render={({ field }) => (
 							<FormItem className='flex flex-row items-start space-x-3 space-y-0'>
 								<FormControl>
@@ -97,6 +99,25 @@ export function Form({ setOpen }: Props) {
 								<div className='space-y-1 leading-none'>
 									<FormLabel>通知を送信する</FormLabel>
 									<FormDescription>タイマーの切り替わり時に通知を送信する</FormDescription>
+								</div>
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name='arrowPlayNotificationSound'
+						render={({ field }) => (
+							<FormItem className='flex flex-row items-start space-x-3 space-y-0'>
+								<FormControl>
+									<Switch
+										className={outlineStyle}
+										checked={field.value}
+										onCheckedChange={field.onChange}
+									/>
+								</FormControl>
+								<div className='space-y-1 leading-none'>
+									<FormLabel>通知音を再生する</FormLabel>
+									<FormDescription>タイマーの切り替わり時に通知音を再生する</FormDescription>
 								</div>
 							</FormItem>
 						)}
