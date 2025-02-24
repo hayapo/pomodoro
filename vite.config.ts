@@ -9,25 +9,28 @@ declare module "@remix-run/node" {
   }
 }
 
-export default defineConfig({
-	esbuild: {
-		drop: ['console', 'debugger'],
-	},
-  plugins: [
-    remix({
-      future: {
-        v3_fetcherPersist: true,
-        v3_relativeSplatPath: true,
-        v3_throwAbortReason: true,
-        v3_singleFetch: true,
-        v3_lazyRouteDiscovery: true,
-      },
-    }),
-    tsconfigPaths(),
-  ],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./app"),
-    }
-  }
+export default defineConfig(({ mode }) => {
+	const isProduction = mode === 'production';
+	return {
+		esbuild: {
+			drop: isProduction ? ['console', 'debugger'] : undefined,
+		},
+		plugins: [
+			remix({
+				future: {
+					v3_fetcherPersist: true,
+					v3_relativeSplatPath: true,
+					v3_throwAbortReason: true,
+					v3_singleFetch: true,
+					v3_lazyRouteDiscovery: true,
+				},
+			}),
+			tsconfigPaths(),
+		],
+		resolve: {
+			alias: {
+				"@": path.resolve(__dirname, "./app"),
+			}
+		}
+	}
 });
