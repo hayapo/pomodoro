@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => {
 			drop: isProduction ? ['console', 'debugger'] : undefined,
 		},
 		plugins: [
+			cloudflareDevProxyVitePlugin(),
 			remix({
 				future: {
 					v3_fetcherPersist: true,
@@ -26,7 +27,6 @@ export default defineConfig(({ mode }) => {
 				},
 			}),
 			tsconfigPaths(),
-			cloudflareDevProxyVitePlugin(),
 		],
 		resolve: {
 			alias: {
