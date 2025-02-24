@@ -1,40 +1,23 @@
-# Welcome to Remix!
+# hayapo's Pomodoro Timer
 
-- 📖 [Remix docs](https://remix.run/docs)
+A simple Pomodoro timer with a seven-segment digit display.
 
-## Development
+url: https://timer.hayapo.dev
 
-Run the dev server:
+## What is this ?
 
-```shellscript
-npm run dev
-```
+This Pomodoro timer helps you manage your work and break intervals using a visually appealing seven-segment digit display.
 
-## Deployment
+## Feature
 
-First, build your app for production:
+- **Ad-free**: Enjoy a clean, distraction-free experience.
+- **Customizable**: Personalize your timer settings, which are saved in your browser’s localStorage.
+- **Dark Mode Only**: Focus on your tasks in a sleek, dark-themed interface.
 
-```sh
-npm run build
-```
+## Tech stack
 
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+- Remix
+- Vite
+- shadcn/ui
+- jotai
+- [nachovigilante/react-7-segment-display](https://github.com/nachovigilante/react-7-segment-display)
