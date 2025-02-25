@@ -1,0 +1,8 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "cloudflare-workers-pomodoro"
+compatibility_date = "2025-02-25"
+main = "./functions/[[path]].ts"
+assets = { directory = "./build/client" }
+
+[observability]
+enabled = true

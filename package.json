@@ -9,6 +9,7 @@
     "lint": "biome check --write ./app",
     "format": "biome format --write ./app",
     "start": "remix-serve ./build/server/index.js",
+		"wrangler-start": "wrangler pages dev build/client",
     "typecheck": "tsc"
   },
   "dependencies": {
