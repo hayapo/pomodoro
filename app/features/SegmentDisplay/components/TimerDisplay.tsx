@@ -1,5 +1,5 @@
 import { countToMinute, countToSecond } from "~/features/timer/lib/timerFuntions";
-import { TwoDigitDisplay } from "./TowDigitDisplay/TwoDigitDisplay";
+import { TwoDigitDisplay } from "./TwoDigitDisplay";
 import clsx from "clsx";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import { cn } from "~/lib/utils";
