@@ -4,7 +4,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import path from "node:path";
 
 declare module "@remix-run/node" {
-  interface Future {
+	interface Future {
     v3_singleFetch: true;
   }
 }
@@ -18,6 +18,8 @@ export default defineConfig(({ mode }) => {
 		plugins: [
 			cloudflareDevProxyVitePlugin(),
 			remix({
+				basename: '/pomodoro',
+				buildDirectory: './build/pomodoro',
 				future: {
 					v3_fetcherPersist: true,
 					v3_relativeSplatPath: true,
@@ -33,6 +35,12 @@ export default defineConfig(({ mode }) => {
 				"@": path.resolve(__dirname, "./app"),
 				"~": path.resolve(__dirname, "./app"),
 			}
-		}
+		},
+		build: {
+			// outDir: './build/pomodoro',s
+			manifest: false,
+			ssrManifest: false,
+		},
+		base: '/pomodoro',
 	}
 });
