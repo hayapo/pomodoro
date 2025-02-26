@@ -10,7 +10,17 @@ import sytles from './tailwind.css?url';
 import { Toaster } from './components/ui/sonner';
 import { Notification } from './features/notification/components/Notification';
 
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: sytles }];
+export const links: LinksFunction = () => [
+	{
+		rel: "icon",
+		href: "/favicon.ico",
+		type: "image/ico",
+	},
+	{ 
+		rel: 'stylesheet',
+		href: sytles
+	}
+];
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
