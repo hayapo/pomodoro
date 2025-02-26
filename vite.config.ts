@@ -18,8 +18,8 @@ export default defineConfig(({ mode }) => {
 		plugins: [
 			cloudflareDevProxyVitePlugin(),
 			remix({
-				basename: '/pomodoro/',
-				buildDirectory: './build/pomodoro/',
+				basename: '/pomodoro',
+				buildDirectory: './build/pomodoro',
 				future: {
 					v3_fetcherPersist: true,
 					v3_relativeSplatPath: true,
