@@ -15,12 +15,9 @@ export default defineConfig(({ mode }) => {
 		esbuild: {
 			drop: isProduction ? ['console', 'debugger'] : undefined,
 		},
-		base: '/pomodoro/',
 		plugins: [
 			cloudflareDevProxyVitePlugin(),
 			remix({
-				basename: '/pomodoro/',
-				buildDirectory: './build/pomodoro',
 				future: {
 					v3_fetcherPersist: true,
 					v3_relativeSplatPath: true,

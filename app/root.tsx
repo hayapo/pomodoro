@@ -13,7 +13,7 @@ import { Notification } from './features/notification/components/Notification';
 export const links: LinksFunction = () => [
 	{
 		rel: "icon",
-		href: "/pomodoro/favicon.ico",
+		href: "favicon.ico",
 		type: "image/ico",
 	},
 	{ 
