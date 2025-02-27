@@ -41,6 +41,6 @@ export default defineConfig(({ mode }) => {
 			manifest: false,
 			ssrManifest: false,
 		},
-		base: '/pomodoro/',
+		base: '/pomodoro',
 	}
 });
