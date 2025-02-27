@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
 		plugins: [
 			cloudflareDevProxyVitePlugin(),
 			remix({
+				manifest: true,
 				future: {
 					v3_fetcherPersist: true,
 					v3_relativeSplatPath: true,
