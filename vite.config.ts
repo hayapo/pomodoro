@@ -15,10 +15,11 @@ export default defineConfig(({ mode }) => {
 		esbuild: {
 			drop: isProduction ? ['console', 'debugger'] : undefined,
 		},
+		base: '/pomodoro/',
 		plugins: [
 			cloudflareDevProxyVitePlugin(),
 			remix({
-				basename: '/pomodoro',
+				basename: '/pomodoro/',
 				buildDirectory: './build/pomodoro',
 				future: {
 					v3_fetcherPersist: true,
@@ -41,6 +42,5 @@ export default defineConfig(({ mode }) => {
 			manifest: false,
 			ssrManifest: false,
 		},
-		base: '/pomodoro',
 	}
 });
