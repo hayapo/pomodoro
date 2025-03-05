@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { useNotifications } from "~/features/notification/hooks/useNotifications";
 import type { PomodoroTimesInSecondState } from "~/features/pomodoro/states/pomodoroTimesInSecondAtom";
 
+import timerWorker from "../lib/timerWorker?worker";
+
 /**
  * @param pomodoroTimesInSecond	集中/休憩分数を秒にしたもの
  * @param settings							通知や音などの設定
@@ -20,19 +22,19 @@ export const usePomodoroTimer = (
 	const [timer, setTimer] = useAtom(timerAtom);
 	const { sendNotification, playNotificationSound} = useNotifications();
 
-	
 	//biome-ignore lint:
 	useEffect(() => {
-		console.log(timer.count);
-		workerRef.current = new Worker(new URL('../lib/timerWorker.ts', import.meta.url));
+		workerRef.current = new timerWorker();
 
 		workerRef.current.onmessage = (event) => {
 			setTimer((prev) => {
 				if (prev.paused) {
 					return prev;
 				}
-				if (event.data.newCount <= 0) {
+				if (event.data.count <= 0) {
+					workerRef.current?.postMessage({ command: "stop"});
 					const nextPomodoroState = prev.pomodoroState === 'focus' ? 'rest' : 'focus';
+					workerRef.current?.postMessage({ command: "start", count: pomodoroTimesInSecond[nextPomodoroState] });
 					return {
 						...prev,
 						pomodoroState: nextPomodoroState,
@@ -41,37 +43,17 @@ export const usePomodoroTimer = (
 				}
 				return {
 					...prev,
-					count: event.data.newCount,
+					count: event.data.count,
 				};
 			});
 		}
-
-		// const timerId = setInterval(() => {
-		// 	setTimer((prev) => {
-		// 		if (prev.paused) {
-		// 			return prev;
-		// 		}
-		// 		if (prev.count <= 0) {
-		// 			const nextPomodoroState = prev.pomodoroState === 'focus' ? 'rest' : 'focus';
-		// 			return {
-		// 				...prev,
-		// 				pomodoroState: nextPomodoroState,
-		// 				count: pomodoroTimesInSecond[nextPomodoroState],
-		// 			};
-		// 		}
-		// 		return {
-		// 			...prev,
-		// 			count: prev.count - 1,
-		// 		};
-		// 	});
-		// }, 1000);
-		// return () => clearInterval(timerId);
 		return () => {
 			if (workerRef.current) {
+				console.log('worker ternimatted');
 				workerRef.current.terminate();
 			}
 		}
-	}, []);
+	}, [pomodoroTimesInSecond]);
 
 	const prevStateRef = useRef<PomodoroState>(timer.pomodoroState);
 	//biome-ignore lint:
@@ -100,15 +82,18 @@ export const usePomodoroTimer = (
 
 	const start = useCallback(() => {
 		setTimer((prev) => ({...prev, paused: false}));
+		workerRef.current?.postMessage({ command: 'start', count: timer.count});
 		toast('タイマーをスタートしました');
-	}, [setTimer]);
+	}, [setTimer, timer.count]);
 
 	const stop = useCallback(() => {
 		setTimer((prev) => ({...prev, paused: true}));
+		workerRef.current?.postMessage({ command: "stop" });
 		toast('タイマーをストップしました');
 	}, [setTimer]);
 
 	const reset = useCallback(() => {
+		workerRef.current?.postMessage({ command: "stop"});
 		setTimer((prev) => {
 			const defaultCount = prev.pomodoroState === 'focus' ? pomodoroTimesInSecond.focus : pomodoroTimesInSecond.rest;
 			return {

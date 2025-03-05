@@ -1,26 +1,30 @@
-import type { WorkerCommandType } from "../types/workerCommandType";
-
 let timerId: NodeJS.Timeout | undefined;
 
-self.onmessage = (event) => {
-	console.log("worker setted");
-	const { command, count } = event.data;
-	const typedCommand = command as WorkerCommandType;
+type TimerEventDataType = {
+	command: 'start' | 'stop';
+	count: number;
+}
 
-	if (typedCommand === 'start') {
+self.onmessage = (event: MessageEvent<TimerEventDataType>) => {
+	console.log("worker setted");
+	const { command, count: _count } = event.data;
+	let count = _count;
+
+	if (command === 'start') {
+		console.log('timer start');
 		timerId = setInterval(() => {
-			if (timerId) {
-				return;
-			}
-			const newCount = count - 1;
-			self.postMessage({ newCount });
+			console.log(count);
+			count = count - 1;
+			self.postMessage({ count: count });
 			if (count <= 0) {
-        clearInterval(timerId);
+				clearInterval(timerId);
         timerId = undefined;
       }
-		}, 1000)
+		}, 1000);
 	} else if (command === "stop") {
     clearInterval(timerId);
     timerId = undefined;
   }
 }
+
+export default {};
