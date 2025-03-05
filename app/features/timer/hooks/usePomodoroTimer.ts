@@ -16,17 +16,22 @@ export const usePomodoroTimer = (
 	pomodoroTimesInSecond: PomodoroTimesInSecondState,
 	settings: Settings,
 ) => {
+	const workerRef = useRef<Worker | null>(null);
 	const [timer, setTimer] = useAtom(timerAtom);
 	const { sendNotification, playNotificationSound} = useNotifications();
 
+	
 	//biome-ignore lint:
 	useEffect(() => {
-		const timerId = setInterval(() => {
+		console.log(timer.count);
+		workerRef.current = new Worker(new URL('../lib/timerWorker.ts', import.meta.url));
+
+		workerRef.current.onmessage = (event) => {
 			setTimer((prev) => {
 				if (prev.paused) {
 					return prev;
 				}
-				if (prev.count <= 0) {
+				if (event.data.newCount <= 0) {
 					const nextPomodoroState = prev.pomodoroState === 'focus' ? 'rest' : 'focus';
 					return {
 						...prev,
@@ -36,12 +41,37 @@ export const usePomodoroTimer = (
 				}
 				return {
 					...prev,
-					count: prev.count - 1,
+					count: event.data.newCount,
 				};
 			});
-		}, 1000);
-		return () => clearInterval(timerId);
-	}, [pomodoroTimesInSecond]);
+		}
+
+		// const timerId = setInterval(() => {
+		// 	setTimer((prev) => {
+		// 		if (prev.paused) {
+		// 			return prev;
+		// 		}
+		// 		if (prev.count <= 0) {
+		// 			const nextPomodoroState = prev.pomodoroState === 'focus' ? 'rest' : 'focus';
+		// 			return {
+		// 				...prev,
+		// 				pomodoroState: nextPomodoroState,
+		// 				count: pomodoroTimesInSecond[nextPomodoroState],
+		// 			};
+		// 		}
+		// 		return {
+		// 			...prev,
+		// 			count: prev.count - 1,
+		// 		};
+		// 	});
+		// }, 1000);
+		// return () => clearInterval(timerId);
+		return () => {
+			if (workerRef.current) {
+				workerRef.current.terminate();
+			}
+		}
+	}, []);
 
 	const prevStateRef = useRef<PomodoroState>(timer.pomodoroState);
 	//biome-ignore lint:
