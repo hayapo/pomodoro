@@ -67,6 +67,11 @@ export function Form({ setOpen }: Props) {
 				pomodoroState: 'focus',
 				count: data.focusMinute,
 			});
+		} else {
+			setTimer((prev) => ({
+				...prev,
+				paused: true,
+			}));
 		}
 		setOpen(false);
 		toast('カスタマイズを登録しました', {
