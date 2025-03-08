@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type SetStateAction, useAtom, useSetAtom } from 'jotai';
-import type { Dispatch } from 'react';
+import type { Dispatch, MutableRefObject } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -19,6 +19,7 @@ import { outlineStyle } from '~/lib/utils';
 import { settingsAtom } from '~/features/customize/states/settingsAtom';
 import { Switch } from '~/components/ui/switch';
 import { timerAtom } from '~/features/timer/states/timerAtom';
+import { useTimerWorkerCommand } from '~/features/timer/hooks/userTimerWokerCommand';
 
 const MIN_COUNT_WARNING = 'タイマーのカウントは1分以上である必要があります';
 const MAX_COUNT_WARNING = 'タイマーのカウントは60分以下である必要があります';
@@ -35,11 +36,13 @@ export type IFormValues = z.infer<typeof formValues>;
 
 type Props = {
 	setOpen: Dispatch<SetStateAction<boolean>>;
+	workerRef: MutableRefObject<Worker | null>;
 };
 
-export function Form({ setOpen }: Props) {
+export function Form({ setOpen, workerRef }: Props) {
 	const setTimer = useSetAtom(timerAtom);
 	const [settings, setSettings] = useAtom(settingsAtom);
+	const { stop } = useTimerWorkerCommand(workerRef);
 	const form = useForm<IFormValues>({
 		resolver: zodResolver(formValues),
 		defaultValues: {
@@ -62,12 +65,14 @@ export function Form({ setOpen }: Props) {
 		});
 		console.log(data);
 		if (settings.focusMinute !== data.focusMinute || settings.restMinute !== data.restMinute) {
+			stop();
 			setTimer({
 				paused: true,
 				pomodoroState: 'focus',
 				count: data.focusMinute,
 			});
 		} else {
+			stop()
 			setTimer((prev) => ({
 				...prev,
 				paused: true,

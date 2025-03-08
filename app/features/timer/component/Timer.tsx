@@ -5,11 +5,16 @@ import { settingsAtom } from '~/features/customize/states/settingsAtom';
 import { TimerButton } from './TimerButton';
 import { usePomodoroTimer } from '../hooks/usePomodoroTimer';
 import { pomodoroTimesInSecondAtom } from '~/features/pomodoro/states/pomodoroTimesInSecondAtom';
+import type { MutableRefObject } from 'react';
 
-export default function Timer() {
+type Props = {
+	workerRef: MutableRefObject<Worker | null>;
+}
+
+export default function Timer(props: Props) {
 	const settings = useAtomValue(settingsAtom);
 	const pomodoroTimesInSecond = useAtomValue(pomodoroTimesInSecondAtom);
-	const { timer, start, stop, reset } = usePomodoroTimer(pomodoroTimesInSecond, settings);
+	const { timer, start, stop, reset, } = usePomodoroTimer(pomodoroTimesInSecond, settings, props.workerRef);
 	const { pomodoroText } = usePomodoroText();
 
 	return (

@@ -1,15 +1,13 @@
 let timerId: NodeJS.Timeout | undefined;
 
-type TimerEventDataType = {
+export type TimerEventDataType = {
 	command: 'start' | 'stop';
 	count: number;
 }
 
 self.onmessage = (event: MessageEvent<TimerEventDataType>) => {
-	console.log("worker setted");
 	const { command, count: _count } = event.data;
 	let count = _count;
-
 	if (command === 'start') {
 		console.log('timer start');
 		timerId = setInterval(() => {
