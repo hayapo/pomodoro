@@ -14,13 +14,8 @@ import { outlineStyle } from '~/lib/utils';
 import { Form } from './Form';
 import { drawerStateAtom } from '../states/drawerStateAtom';
 import { useAtom } from 'jotai';
-import type { MutableRefObject } from 'react';
 
-type Props = {
-	workerRef: MutableRefObject<Worker | null>;
-}
-
-export function FormDrawer(props: Props) {
+export function FormDrawer() {
 	const [open, setOpen] = useAtom(drawerStateAtom);
 
 	return (
@@ -42,7 +37,7 @@ export function FormDrawer(props: Props) {
 						</DrawerDescription>
 					</DrawerHeader>
 					<div className='p-4'>
-						<Form setOpen={setOpen} workerRef={props.workerRef} />
+						<Form setOpen={setOpen} />
 					</div>
 					<DrawerFooter>
 						<DrawerClose asChild>

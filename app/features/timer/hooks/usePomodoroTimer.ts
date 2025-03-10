@@ -1,14 +1,14 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import type { Settings } from "~/features/customize/states/settingsAtom";
 import { timerAtom } from "../states/timerAtom";
-import { type MutableRefObject, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import type { PomodoroState } from "~/features/pomodoro/types/pomodoroState";
 import { SITE_NAME } from "~/constants";
 import { toast } from "sonner";
 import { useNotifications } from "~/features/notification/hooks/useNotifications";
 import type { PomodoroTimesInSecondState } from "~/features/pomodoro/states/pomodoroTimesInSecondAtom";
-
 import timerWorker from "../lib/timerWorker?worker";
+import { WorkerRefAtom } from "../states/workerAtom";
 
 /**
  * @param pomodoroTimesInSecond	集中/休憩分数を秒にしたもの
@@ -17,24 +17,28 @@ import timerWorker from "../lib/timerWorker?worker";
 export const usePomodoroTimer = (
 	pomodoroTimesInSecond: PomodoroTimesInSecondState,
 	settings: Settings,
-	workerRef: MutableRefObject<Worker | null>,
 ) => {
 	const [timer, setTimer] = useAtom(timerAtom);
 	const { sendNotification, playNotificationSound} = useNotifications();
+	
+	const worker = useAtomValue(WorkerRefAtom);
 
 	//biome-ignore lint:
 	useEffect(() => {
-		workerRef.current = new timerWorker();
+		if (!worker) {
+			return;
+		}
+		worker.current = new timerWorker();
 
-		workerRef.current.onmessage = (event) => {
+		worker.current.onmessage = (event) => {
 			setTimer((prev) => {
 				if (prev.paused) {
 					return prev;
 				}
 				if (event.data.count <= 0) {
-					workerRef.current?.postMessage({ command: "stop"});
+					worker.current?.postMessage({ command: "stop"});
 					const nextPomodoroState = prev.pomodoroState === 'focus' ? 'rest' : 'focus';
-					workerRef.current?.postMessage({ command: "start", count: pomodoroTimesInSecond[nextPomodoroState] });
+					worker.current?.postMessage({ command: "start", count: pomodoroTimesInSecond[nextPomodoroState] });
 					return {
 						...prev,
 						pomodoroState: nextPomodoroState,
@@ -48,9 +52,9 @@ export const usePomodoroTimer = (
 			});
 		}
 		return () => {
-			if (workerRef.current) {
+			if (worker.current) {
 				console.log('worker ternimatted');
-				workerRef.current.terminate();
+				worker.current.terminate();
 			}
 		}
 	}, []);
@@ -81,19 +85,27 @@ export const usePomodoroTimer = (
 	}, [timer.pomodoroState, timer.paused, settings]);
 
 	const start = useCallback(() => {
+		if (!worker) {
+			return;
+		}
 		setTimer((prev) => ({...prev, paused: false}));
-		workerRef.current?.postMessage({ command: 'start', count: timer.count});
+		worker.current?.postMessage({ command: 'start', count: timer.count});
 		toast('タイマーをスタートしました');
-	}, [setTimer, timer.count, workerRef]);
+	}, [setTimer, timer.count, worker]);
 
 	const stop = useCallback(() => {
+		if (!worker) {
+			return;
+		}
 		setTimer((prev) => ({...prev, paused: true}));
-		workerRef.current?.postMessage({ command: "stop" });
+		worker.current?.postMessage({ command: "stop" });
 		toast('タイマーをストップしました');
-	}, [setTimer, workerRef]);
+	}, [setTimer, worker]);
 
 	const reset = useCallback(() => {
-		workerRef.current?.postMessage({ command: "stop"});
+		if (!worker) {
+			return;
+		}
 		setTimer((prev) => {
 			const defaultCount = prev.pomodoroState === 'focus' ? pomodoroTimesInSecond.focus : pomodoroTimesInSecond.rest;
 			return {
@@ -102,8 +114,9 @@ export const usePomodoroTimer = (
 				count: defaultCount,
 			}
 		});
+		worker.current?.postMessage({ command: "stop"});
 		toast('タイマーをリセットしました');
-	}, [setTimer, pomodoroTimesInSecond, workerRef]);
+	}, [setTimer, pomodoroTimesInSecond, worker]);
 
 	return {
 		timer,
