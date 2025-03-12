@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai';
 import { usePomodoroText } from '../hooks/usePomodoroText';
-import { TimerDisplay } from '~/features/SegmentDisplay/components/TimerDisplay';
+import { TimerDisplay } from '~/features/segmentDisplay/components/TimerDisplay';
 import { settingsAtom } from '~/features/customize/states/settingsAtom';
 import { TimerButton } from './TimerButton';
 import { usePomodoroTimer } from '../hooks/usePomodoroTimer';

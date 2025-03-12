@@ -1,6 +1,8 @@
 import { SITE_NAME } from "~/constants";
+import { useAudio } from "./useAudio";
 
 export const useNotifications = () => {
+	const { play } = useAudio('./pigeon-clock.mp3', 0.0001);
 	const requestPermission = () => {
 		if ('Notification' in window) {
 			const permission = Notification.permission;
@@ -38,7 +40,7 @@ export const useNotifications = () => {
 	};
 
 	const playNotificationSound = () => {
-		new Audio('./pigeon-clock.mp3').play();
+		play();
 	};
 
 	return {
@@ -46,4 +48,4 @@ export const useNotifications = () => {
 		sendNotification,
 		playNotificationSound,
 	}
-}
+};
