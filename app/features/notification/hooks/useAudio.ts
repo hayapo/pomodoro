@@ -1,12 +1,6 @@
-import { useAtom } from "jotai";
-import { audioContextAtom } from "../state/audioContextAtom"
 import { useCallback, useEffect, useState } from "react";
 
 export const useAudio = (url: string, initialGain = 0.01) => {
-	// const [audioContext, setAudioContext] = useAtom(audioContextAtom);
-	// if (!audioContext) {
-	// 	setAudioContext(new AudioContext());
-	// }
 	const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
   const [gainValue, setGainValue] = useState(initialGain);

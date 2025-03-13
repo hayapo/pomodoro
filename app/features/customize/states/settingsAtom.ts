@@ -6,6 +6,7 @@ export type GeneralSettings = {
 	arrowPlayNotificationSound: boolean;
 	showPomodoroText: boolean;
 	arrowSendNotification: boolean;
+	audioVolume: number;
 };
 
 export type PomodoroSettings = {
@@ -23,6 +24,7 @@ export const settingsAtom = atomWithStorage<Settings>(
 		showPomodoroText: true,
 		focusMinute: DEFAULT_FOCUS_TIMER_MINUTE,
 		restMinute: DEFAULT_REST_TIMER_MINUTE,
+		audioVolume: 0.5,
 	},
 	undefined,
 	{
