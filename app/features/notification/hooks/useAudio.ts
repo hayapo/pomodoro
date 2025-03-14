@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export const useAudio = (url: string, initialGain = 0.01) => {
+export const useAudio = (url: string, initialGain = 0.5) => {
 	const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
   const [gainValue, setGainValue] = useState(initialGain);
