@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type SetStateAction, useAtom, useAtomValue, useSetAtom } from 'jotai';
-import type { Dispatch, MutableRefObject } from 'react';
+import { useState, type Dispatch, type MutableRefObject } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -21,6 +21,8 @@ import { Switch } from '~/components/ui/switch';
 import { timerAtom } from '~/features/timer/states/timerAtom';
 import { useTimerWorkerCommand } from '~/features/timer/hooks/userTimerWokerCommand';
 import { WorkerRefAtom } from '~/features/timer/states/workerAtom';
+import { Slider } from '~/components/ui/slider';
+import { useNotifications } from '~/features/notification/hooks/useNotifications';
 
 const MIN_COUNT_WARNING = 'タイマーのカウントは1分以上である必要があります';
 const MAX_COUNT_WARNING = 'タイマーのカウントは60分以下である必要があります';
@@ -31,6 +33,7 @@ export const formValues = z.object({
 	showPomodoroText: z.coerce.boolean(),
 	arrowSendNofitication: z.coerce.boolean(),
 	arrowPlayNotificationSound: z.coerce.boolean(),
+	volume: z.coerce.number().min(0).max(1),
 });
 
 export type IFormValues = z.infer<typeof formValues>;
@@ -58,6 +61,7 @@ export function Form({ setOpen }: Props) {
 			arrowPlayNotificationSound: settings.arrowPlayNotificationSound,
 			focusMinute: settings.focusMinute,
 			restMinute: settings.restMinute,
+			volume: settings.audioVolume,
 		},
 	});
 
@@ -69,6 +73,7 @@ export function Form({ setOpen }: Props) {
 			showPomodoroText: data.showPomodoroText,
 			focusMinute: data.focusMinute,
 			restMinute: data.restMinute,
+			audioVolume: data.volume,
 		});
 		console.log(data);
 		if (settings.focusMinute !== data.focusMinute || settings.restMinute !== data.restMinute) {
@@ -124,24 +129,41 @@ export function Form({ setOpen }: Props) {
 						control={form.control}
 						name='arrowPlayNotificationSound'
 						render={({ field }) => (
-							<FormItem className='flex flex-row items-start space-x-3 space-y-0'>
-								<FormControl>
-									<Switch
-										className={outlineStyle}
-										checked={field.value}
-										onCheckedChange={field.onChange}
-									/>
-								</FormControl>
-								<div className='space-y-1 leading-none'>
-									<FormLabel>通知音を再生する</FormLabel>
-									<FormDescription className='flex flex-col gap-1'>
-										<span>タイマーの切り替わり時に通知音を再生する</span>
-										<span className='text-red-500'>※ 音量調整機能は実装中のため、大きい音が鳴ります。注意して使用してください</span> 
-									</FormDescription>
+							<FormItem className='flex flex-col'>
+								<div className='flex space-x-3'>
+									<FormControl>
+										<Switch
+											className={outlineStyle}
+											checked={field.value}
+											onCheckedChange={field.onChange}
+										/>
+									</FormControl>
+									<div className='space-y-1 leading-none'>
+										<FormLabel>通知音を再生する</FormLabel>
+										<FormDescription className='flex flex-col gap-1'>
+											<span>タイマーの切り替わり時に通知音を再生する</span>
+										</FormDescription>
+									</div>
 								</div>
+								{field.value && 
+									<FormField
+										control={form.control}
+										name='volume'
+										render={({ field }) => (
+											<FormItem className='flex flex-col space-y-3'>
+												<div className='space-y-1 leading-none'>
+													<FormLabel>通知音量</FormLabel>
+												</div>
+												<FormControl>
+													<Slider defaultValue= {[field.value]} max={1} min={0} step={0.01} onValueChange={field.onChange}/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+								}
 							</FormItem>
 						)}
-					/>
+						/>
 					<FormField
 						control={form.control}
 						name='showPomodoroText'
