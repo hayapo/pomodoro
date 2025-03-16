@@ -1,10 +1,11 @@
+import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useState } from "react";
+import { settingsAtom } from "~/features/customize/states/settingsAtom";
 
 export const useAudio = (url: string, initialGain = 0.5) => {
 	const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
-  const [gainValue, setGainValue] = useState(initialGain);
-
+	const { audioVolume: gainValue } = useAtomValue(settingsAtom);
 
   useEffect(() => {
     // AudioContext を作成
@@ -51,6 +52,7 @@ export const useAudio = (url: string, initialGain = 0.5) => {
     gainNode.gain.setValueAtTime(gainValue, audioContext.currentTime); // 状態管理しているgainValueを使用
 
     // 接続: source -> gainNode -> audioContext.destination
+		console.log(gainValue);
     source.connect(gainNode);
     gainNode.connect(audioContext.destination);
 
@@ -61,6 +63,5 @@ export const useAudio = (url: string, initialGain = 0.5) => {
 	return {
 		play,
 		gainValue,
-		setGainValue
 	}
 }
