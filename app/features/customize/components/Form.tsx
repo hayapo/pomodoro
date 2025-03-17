@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type SetStateAction, useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useState, type Dispatch, type MutableRefObject } from 'react';
+import type { Dispatch } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -22,7 +22,6 @@ import { timerAtom } from '~/features/timer/states/timerAtom';
 import { useTimerWorkerCommand } from '~/features/timer/hooks/userTimerWokerCommand';
 import { WorkerRefAtom } from '~/features/timer/states/workerAtom';
 import { Slider } from '~/components/ui/slider';
-import { useNotifications } from '~/features/notification/hooks/useNotifications';
 
 const MIN_COUNT_WARNING = 'タイマーのカウントは1分以上である必要があります';
 const MAX_COUNT_WARNING = 'タイマーのカウントは60分以下である必要があります';

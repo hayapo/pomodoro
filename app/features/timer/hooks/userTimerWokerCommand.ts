@@ -1,5 +1,4 @@
 import type { MutableRefObject } from "react";
-import type { TimerEventDataType } from "../lib/timerWorker";
 
 export const useTimerWorkerCommand = (workerRef: MutableRefObject<Worker | null>) => {
 	const start = (count: number) => {
