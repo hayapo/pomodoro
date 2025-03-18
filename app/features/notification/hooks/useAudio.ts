@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import { settingsAtom } from "~/features/customize/states/settingsAtom";
 
-export const useAudio = (url: string, initialGain = 0.5) => {
+export const useAudio = (url: string ) => {
 	const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
 	const { audioVolume: gainValue } = useAtomValue(settingsAtom);
