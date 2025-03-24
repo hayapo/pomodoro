@@ -19,7 +19,7 @@ export const usePomodoroTimer = (
 	settings: Settings,
 ) => {
 	const [timer, setTimer] = useAtom(timerAtom);
-	const { sendNotification, playNotificationSound} = useNotifications();
+	const { sendNotification } = useNotifications();
 	
 	const worker = useAtomValue(WorkerRefAtom);
 
@@ -76,9 +76,6 @@ export const usePomodoroTimer = (
 					},
 					`${nextState}-${Date.now()}`
 				)
-			}
-			if (settings.arrowPlayNotificationSound) {
-				playNotificationSound();
 			}
 		}
 		prevStateRef.current = nextState;

@@ -3,10 +3,12 @@ import { useState, useEffect, useCallback } from "react";
 import { useAtomValue } from "jotai";
 import { settingsAtom } from "~/features/customize/states/settingsAtom";
 
-export const useNotifications = (audioSource: string) => {
+const DEFAULT_AUDIO_SOURCE = './pigeon-clock.mp3';
+
+export const useNotifications = (audioSource = DEFAULT_AUDIO_SOURCE) => {
 	const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 	const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
-	const { audioVolume: gainValue } = useAtomValue(settingsAtom);
+	const { audioVolume: gainValue, arrowPlayNotificationSound } = useAtomValue(settingsAtom);
 
 		useEffect(() => {
 			// AudioContext を作成
@@ -35,7 +37,7 @@ export const useNotifications = (audioSource: string) => {
 			};
 		}, [audioSource]);
 	
-	const requestPermission = () => {
+	const requestPermission = useCallback(() => {
 		if ('Notification' in window) {
 			const permission = Notification.permission;
 			if (permission === 'denied' || permission === 'granted') {
@@ -54,11 +56,10 @@ export const useNotifications = (audioSource: string) => {
 				}
 			)
 		}
-	};
+	}, []);
 
 	/**
    * 通知音を再生する関数
-   * - ボタンなどから呼び出す
    */
 		const playNotificationSound = useCallback(() => {
 			if (!audioContext || !audioBuffer) {
@@ -82,6 +83,11 @@ export const useNotifications = (audioSource: string) => {
 			source.start();
 		}, [audioContext, audioBuffer, gainValue]);
 
+	/**
+	 * 通知音を含めて通知を再生する関数
+	 * @params message: object
+	 * @params tag: string
+	 */
 	const sendNotification = useCallback((
 		message: {
 			title: string;
@@ -94,8 +100,9 @@ export const useNotifications = (audioSource: string) => {
 				body: message.body,
 				tag: tag,
 			});
+			arrowPlayNotificationSound && playNotificationSound();
 		}
-	}, []);
+	}, [arrowPlayNotificationSound, playNotificationSound]);
 
 	return {
 		requestPermission,
