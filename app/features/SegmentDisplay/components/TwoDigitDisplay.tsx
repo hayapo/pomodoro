@@ -7,7 +7,7 @@ type Props = {
 	height: number;
 };
 
-export function TwoDigitDisplay(props: Props) {
+export function DisplayWithTwoDigits(props: Props) {
 	return (
 		<Display value={props.value} color={props.color} height={props.height} skew count={2} />
 	);

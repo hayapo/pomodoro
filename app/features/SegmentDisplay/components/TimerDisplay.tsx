@@ -1,5 +1,5 @@
 import { countToMinute, countToSecond } from "~/features/timer/lib/timerFuntions";
-import { TwoDigitDisplay } from "./TwoDigitDisplay";
+import { DisplayWithTwoDigits } from "./TwoDigitDisplay";
 import clsx from "clsx";
 import { useWindowSize } from "~/hooks/useWindowSize";
 import { cn } from "~/lib/utils";
@@ -14,7 +14,7 @@ export function TimerDisplay() {
 	// segment-displayのheightは innerWidth * 0.2にする
 	const computedHeight = useMemo(
 		() => (
-			// 最大のheightは300する
+			// 最大のheightは300にする
 			size.width * 0.2 <= 300 ? size.width * 0.2 : 300
 		),
 		[size.width]
@@ -31,9 +31,9 @@ export function TimerDisplay() {
 	});
 	return (
 		<div className='flex items-center h-[150px] md:h-[200px] lg:h-[300px]' >
-			<TwoDigitDisplay value={countToMinute(timer.count)} color={color} height={computedHeight} />
+			<DisplayWithTwoDigits value={countToMinute(timer.count)} color={color} height={computedHeight} />
 			<Colon timer={timer} />
-			<TwoDigitDisplay value={countToSecond(timer.count)} color={color} height={computedHeight} />
+			<DisplayWithTwoDigits value={countToSecond(timer.count)} color={color} height={computedHeight} />
 		</div>
 	)
 };
