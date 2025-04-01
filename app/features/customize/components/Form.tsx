@@ -3,7 +3,7 @@ import { type SetStateAction, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import type { Dispatch } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
+import { z, type ZodType } from 'zod';
 import { Button } from '~/components/ui/button';
 import {
 	Form as _Form,
@@ -16,12 +16,13 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import { outlineStyle } from '~/lib/utils';
-import { settingsAtom } from '~/features/customize/states/settingsAtom';
+import { type Settings, settingsAtom } from '~/features/customize/states/settingsAtom';
 import { Switch } from '~/components/ui/switch';
 import { timerAtom } from '~/features/timer/states/timerAtom';
 import { useTimerWorkerCommand } from '~/features/timer/hooks/userTimerWokerCommand';
 import { WorkerRefAtom } from '~/features/timer/states/workerAtom';
 import { Slider } from '~/components/ui/slider';
+import type { Colors } from '../types/colors';
 
 const MIN_COUNT_WARNING = 'タイマーのカウントは1分以上である必要があります';
 const MAX_COUNT_WARNING = 'タイマーのカウントは60分以下である必要があります';
@@ -30,10 +31,11 @@ export const formValues = z.object({
 	focusMinute: z.coerce.number().min(1, MIN_COUNT_WARNING).max(60, MAX_COUNT_WARNING),
 	restMinute: z.coerce.number().min(1, MIN_COUNT_WARNING).max(60, MAX_COUNT_WARNING),
 	showPomodoroText: z.coerce.boolean(),
-	arrowSendNofitication: z.coerce.boolean(),
+	arrowSendNotification: z.coerce.boolean(),
 	arrowPlayNotificationSound: z.coerce.boolean(),
-	volume: z.coerce.number().min(0).max(1),
-});
+	audioVolume: z.coerce.number().min(0).max(1),
+	primaryColor: z.custom<Colors>(),
+}) satisfies ZodType<Settings>;
 
 export type IFormValues = z.infer<typeof formValues>;
 
@@ -56,23 +58,25 @@ export function Form({ setOpen }: Props) {
 		resolver: zodResolver(formValues),
 		defaultValues: {
 			showPomodoroText: settings.showPomodoroText,
-			arrowSendNofitication: settings.arrowSendNotification,
+			arrowSendNotification: settings.arrowSendNotification,
 			arrowPlayNotificationSound: settings.arrowPlayNotificationSound,
 			focusMinute: settings.focusMinute,
 			restMinute: settings.restMinute,
-			volume: settings.audioVolume,
+			audioVolume: settings.audioVolume,
+			
 		},
 	});
 
 	const onSubmit: SubmitHandler<IFormValues> = (data: IFormValues) => {
 		const prevSettings = settings;
 		setSettings({
-			arrowSendNotification: data.arrowSendNofitication,
+			arrowSendNotification: data.arrowSendNotification,
 			arrowPlayNotificationSound: data.arrowPlayNotificationSound,
 			showPomodoroText: data.showPomodoroText,
 			focusMinute: data.focusMinute,
 			restMinute: data.restMinute,
-			audioVolume: data.volume,
+			audioVolume: data.audioVolume,
+			primaryColor: data.primaryColor,
 		});
 		console.log(data);
 		if (settings.focusMinute !== data.focusMinute || settings.restMinute !== data.restMinute) {
@@ -107,7 +111,7 @@ export function Form({ setOpen }: Props) {
 				<div className='flex flex-col gap-4'>
 				<FormField
 						control={form.control}
-						name='arrowSendNofitication'
+						name='arrowSendNotification'
 						render={({ field }) => (
 							<FormItem className='flex flex-row items-start space-x-3 space-y-0'>
 								<FormControl>
@@ -147,14 +151,15 @@ export function Form({ setOpen }: Props) {
 								{field.value && 
 									<FormField
 										control={form.control}
-										name='volume'
+										name='audioVolume'
 										render={({ field }) => (
 											<FormItem className='flex flex-col space-y-3'>
 												<div className='space-y-1 leading-none'>
 													<FormLabel>通知音量</FormLabel>
 												</div>
 												<FormControl>
-													<Slider defaultValue= {[field.value]} max={1} min={0} step={0.01} onValueChange={field.onChange}/>
+													{/* TODO: settings経由だと色が反映されないので治す */}
+													<Slider defaultValue= {[field.value]} max={1} min={0} step={0.01} onValueChange={field.onChange} color={settings.primaryColor} />
 												</FormControl>
 											</FormItem>
 										)}

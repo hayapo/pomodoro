@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { Colors } from "./app/features/customize/types/colors";
 
 export default {
 	darkMode: ['class', '[data-theme="dark"]'],
@@ -16,8 +17,10 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			colors: {
-				seggreen: '#00FF00',
+				[Colors.Green]: '#00FF00',
 				segblue: '#008080',
+				[Colors.Pink]: '#ff69b4',
+				[Colors.Blue]: '#7b68ee',
 				// 全体的な背景色
 				background: "hsl(var(--background))",
 				// 全体的な文字色

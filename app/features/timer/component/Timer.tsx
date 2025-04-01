@@ -1,10 +1,10 @@
 import { useAtomValue } from 'jotai';
 import { usePomodoroText } from '../hooks/usePomodoroText';
-import { TimerDisplay } from '~/features/segmentDisplay/components/TimerDisplay';
 import { settingsAtom } from '~/features/customize/states/settingsAtom';
 import { TimerButton } from './TimerButton';
 import { usePomodoroTimer } from '../hooks/usePomodoroTimer';
 import { pomodoroTimesInSecondAtom } from '~/features/pomodoro/states/pomodoroTimesInSecondAtom';
+import { TimerDisplay } from '~/features/SegmentDisplay/components/TimerDisplay';
 
 export default function Timer() {
 	const settings = useAtomValue(settingsAtom);

@@ -1,7 +1,6 @@
 export const Colors = {
-  Red: 'red',
-  Green: 'green',
-  Blue: 'blue',
-  Pink: 'pink',
+  Green: 'lime',
+  Blue: 'mediumSlateBlue',
+  Pink: 'hotPink',
 } as const;
 export type Colors = (typeof Colors)[keyof typeof Colors];

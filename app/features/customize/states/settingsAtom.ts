@@ -26,7 +26,7 @@ export const settingsAtom = atomWithStorage<Settings>(
 		focusMinute: DEFAULT_FOCUS_TIMER_MINUTE,
 		restMinute: DEFAULT_REST_TIMER_MINUTE,
 		audioVolume: 0.5,
-		primaryColor: 'green',
+		primaryColor: 'lime',
 	},
 	undefined,
 	{

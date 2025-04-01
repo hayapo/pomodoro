@@ -41,7 +41,7 @@ export function TimerDisplay() {
 function Colon({ timer }: { timer: TimerState }) {
 	const colonSize = clsx('size-[10px] md:size-[15px] lg:size-[20px]')
 	const colonColor = cn({
-		'bg-seggreen': !timer.paused && timer.pomodoroState === 'focus',
+		'bg-lime': !timer.paused && timer.pomodoroState === 'focus',
 		'bg-segblue': !timer.paused && timer.pomodoroState === 'rest',
 		'bg-white': timer.paused,
 	});
