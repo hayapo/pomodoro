@@ -53,6 +53,8 @@ export function Form({ setOpen }: Props) {
 	}
 	const { stop } = useTimerWorkerCommand(worker);
 
+	console.log(settings.primaryColor);
+
 
 	const form = useForm<IFormValues>({
 		resolver: zodResolver(formValues),
@@ -220,6 +222,16 @@ export function Form({ setOpen }: Props) {
 								)}
 							</FormItem>
 						)}
+					/>
+					<FormField 
+					control={form.control}
+					name='primaryColor'
+					render={({ field }) => (
+						<FomrItem>
+							<FormLabel>タイマーの色をカスタマイズ</FormLabel>
+							{/* TODO：色を選択できるようにする */}
+						</FomrItem>
+					)}
 					/>
 					<Button variant='secondary' type='submit' className={outlineStyle}>
 						カスタマイズを登録
