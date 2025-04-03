@@ -22,7 +22,8 @@ import { timerAtom } from '~/features/timer/states/timerAtom';
 import { useTimerWorkerCommand } from '~/features/timer/hooks/userTimerWokerCommand';
 import { WorkerRefAtom } from '~/features/timer/states/workerAtom';
 import { Slider } from '~/components/ui/slider';
-import type { Colors } from '../types/colors';
+import { Colors } from '../types/colors';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 
 const MIN_COUNT_WARNING = 'タイマーのカウントは1分以上である必要があります';
 const MAX_COUNT_WARNING = 'タイマーのカウントは60分以下である必要があります';
@@ -65,7 +66,7 @@ export function Form({ setOpen }: Props) {
 			focusMinute: settings.focusMinute,
 			restMinute: settings.restMinute,
 			audioVolume: settings.audioVolume,
-			
+			primaryColor: settings.primaryColor,
 		},
 	});
 
@@ -224,14 +225,25 @@ export function Form({ setOpen }: Props) {
 						)}
 					/>
 					<FormField 
-					control={form.control}
-					name='primaryColor'
-					render={({ field }) => (
-						<FomrItem>
-							<FormLabel>タイマーの色をカスタマイズ</FormLabel>
-							{/* TODO：色を選択できるようにする */}
-						</FomrItem>
-					)}
+						control={form.control}
+						name='primaryColor'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>集中時のタイマーの色をカスタマイズ</FormLabel>
+								<Select onValueChange={field.onChange} defaultValue={field.value}>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder={`${field.value}`} />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										<SelectItem value={Colors.Green}>Green</SelectItem>
+										<SelectItem value={Colors.Blue}>Blue</SelectItem>
+										<SelectItem value={Colors.Pink}>Pink</SelectItem>
+									</SelectContent>
+								</Select>
+							</FormItem>
+						)}
 					/>
 					<Button variant='secondary' type='submit' className={outlineStyle}>
 						カスタマイズを登録

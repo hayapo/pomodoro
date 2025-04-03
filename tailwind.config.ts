@@ -19,8 +19,8 @@ export default {
 			colors: {
 				[Colors.Green]: '#00FF00',
 				segblue: '#008080',
-				[Colors.Pink]: '#ff69b4',
-				[Colors.Blue]: '#7b68ee',
+				'hotpink': '#ff69b4',
+				'mediumslateblue': '#7b68ee',
 				// 全体的な背景色
 				background: "hsl(var(--background))",
 				// 全体的な文字色
