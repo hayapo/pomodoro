@@ -237,7 +237,7 @@ export function Form({ setOpen }: Props) {
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										<SelectItem value={Colors.Green}>Green</SelectItem>
+										<SelectItem className='bg-black' value={Colors.Green}>Green</SelectItem>
 										<SelectItem value={Colors.Blue}>Blue</SelectItem>
 										<SelectItem value={Colors.Pink}>Pink</SelectItem>
 									</SelectContent>

@@ -2,7 +2,6 @@ import * as React from "react"
 import * as SliderPrimitive from "@radix-ui/react-slider"
 
 import { cn } from "~/lib/utils"
-import { Colors } from "~/features/customize/types/colors"
 import clsx from "clsx"
 import { useAtomValue } from "jotai"
 import { settingsAtom } from "~/features/customize/states/settingsAtom"
@@ -12,17 +11,6 @@ const Slider = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
 >(({ className, ...props }, ref,) => {
 	const { primaryColor } = useAtomValue(settingsAtom);
-	// const sliderBgColor = (() => {
-	// 	switch(primaryColor) {
-	// 		case "lime":
-	// 			return clsx('bg-lime')
-	// 		case "mediumslateblue":
-	// 			return clsx('bg-mediumslateblue')
-	// 		case "hotpink":
-	// 			return clsx('bg-hotpink')
-	// 	}
-	// })();
-	console.log(primaryColor);
 	return (
 		<SliderPrimitive.Root
 			ref={ref}
