@@ -23,7 +23,7 @@ import { useTimerWorkerCommand } from '~/features/timer/hooks/userTimerWokerComm
 import { WorkerRefAtom } from '~/features/timer/states/workerAtom';
 import { Slider } from '~/components/ui/slider';
 import { Colors } from '../types/colors';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group';
 
 const MIN_COUNT_WARNING = 'タイマーのカウントは1分以上である必要があります';
 const MAX_COUNT_WARNING = 'タイマーのカウントは60分以下である必要があります';
@@ -55,6 +55,8 @@ export function Form({ setOpen }: Props) {
 	const { stop } = useTimerWorkerCommand(worker);
 
 	console.log(settings.primaryColor);
+
+	const colorsArray = Object.values(Colors);
 
 
 	const form = useForm<IFormValues>({
@@ -230,18 +232,20 @@ export function Form({ setOpen }: Props) {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>集中時のタイマーの色をカスタマイズ</FormLabel>
-								<Select onValueChange={field.onChange} defaultValue={field.value}>
-									<FormControl>
-										<SelectTrigger>
-											<SelectValue placeholder={`${field.value}`} />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										<SelectItem className='bg-black' value={Colors.Green}>Green</SelectItem>
-										<SelectItem value={Colors.Blue}>Blue</SelectItem>
-										<SelectItem value={Colors.Pink}>Pink</SelectItem>
-									</SelectContent>
-								</Select>
+								<FormControl>
+									<RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
+										{Object.entries(Colors).map(([key, value]) => {
+											return (
+												<FormItem key={key} className="flex items-center space-x-3 space-y-0">
+													<FormControl>
+														<RadioGroupItem value={value}/>
+													</FormControl>
+													<FormLabel>{key}</FormLabel>
+												</FormItem>
+											)
+										})}
+									</RadioGroup>
+								</FormControl>
 							</FormItem>
 						)}
 					/>
