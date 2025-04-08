@@ -15,7 +15,7 @@ import {
 	FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { outlineStyle } from '~/lib/utils';
+import { cn, outlineStyle } from '~/lib/utils';
 import { type Settings, settingsAtom } from '~/features/customize/states/settingsAtom';
 import { Switch } from '~/components/ui/switch';
 import { timerAtom } from '~/features/timer/states/timerAtom';
@@ -24,6 +24,7 @@ import { WorkerRefAtom } from '~/features/timer/states/workerAtom';
 import { Slider } from '~/components/ui/slider';
 import { Colors } from '../types/colors';
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group';
+import { useColors } from '../hooks/useColors';
 
 const MIN_COUNT_WARNING = 'タイマーのカウントは1分以上である必要があります';
 const MAX_COUNT_WARNING = 'タイマーのカウントは60分以下である必要があります';
@@ -47,16 +48,13 @@ type Props = {
 export function Form({ setOpen }: Props) {
 	const setTimer = useSetAtom(timerAtom);
 	const [settings, setSettings] = useAtom(settingsAtom);
-	
+	const { bgColor, cssNamedColor } = useColors();
+
 	const worker = useAtomValue(WorkerRefAtom);
 	if (!worker) {
 		return;
 	}
 	const { stop } = useTimerWorkerCommand(worker);
-
-	console.log(settings.primaryColor);
-
-	const colorsArray = Object.values(Colors);
 
 
 	const form = useForm<IFormValues>({
@@ -164,7 +162,14 @@ export function Form({ setOpen }: Props) {
 												</div>
 												<FormControl>
 													{/* TODO: settings経由だと色が反映されないので治す */}
-													<Slider defaultValue= {[field.value]} max={1} min={0} step={0.01} onValueChange={field.onChange} color={settings.primaryColor} />
+													<Slider 
+														defaultValue={[field.value]}
+														max={1}
+														min={0}
+														step={0.01}
+														onValueChange={field.onChange}
+														color={bgColor}
+													/>
 												</FormControl>
 											</FormItem>
 										)}
@@ -240,7 +245,7 @@ export function Form({ setOpen }: Props) {
 													<FormControl>
 														<RadioGroupItem value={value}/>
 													</FormControl>
-													<FormLabel>{key}</FormLabel>
+													<FormLabel className={'text-mediumslateblue'}>{key}</FormLabel>
 												</FormItem>
 											)
 										})}
