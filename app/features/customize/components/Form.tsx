@@ -15,7 +15,7 @@ import {
 	FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { cn, outlineStyle } from '~/lib/utils';
+import { cn, getStyleWithPrimaryColor, outlineStyle } from '~/lib/utils';
 import { type Settings, settingsAtom } from '~/features/customize/states/settingsAtom';
 import { Switch } from '~/components/ui/switch';
 import { timerAtom } from '~/features/timer/states/timerAtom';
@@ -245,7 +245,12 @@ export function Form({ setOpen }: Props) {
 													<FormControl>
 														<RadioGroupItem value={value}/>
 													</FormControl>
-													<FormLabel className={'text-mediumslateblue'}>{key}</FormLabel>
+													<FormLabel>
+														<div className='flex items-center gap-2'>
+															<div className={getStyleWithPrimaryColor('size-5 rounded-sm', value)} />
+															{key}
+														</div>
+													</FormLabel>
 												</FormItem>
 											)
 										})}
