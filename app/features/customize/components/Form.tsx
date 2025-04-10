@@ -168,7 +168,7 @@ export function Form({ setOpen }: Props) {
 														min={0}
 														step={0.01}
 														onValueChange={field.onChange}
-														color={bgColor}
+														color={getStyleWithPrimaryColor('',cssNamedColor)}
 													/>
 												</FormControl>
 											</FormItem>
