@@ -7,7 +7,6 @@ import { useMemo } from "react";
 import { timerAtom, type TimerState } from "~/features/timer/states/timerAtom";
 import { useAtomValue } from "jotai";
 import { settingsAtom } from "~/features/customize/states/settingsAtom";
-import type { Colors } from "~/features/customize/types/colors";
 import { useColors } from "~/features/customize/hooks/useColors";
 
 export function TimerDisplay() {

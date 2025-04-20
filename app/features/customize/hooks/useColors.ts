@@ -11,5 +11,5 @@ export const useColors = () => {
 		return 'bg'.concat('-', p)
 	}
 
-	return { bgColor, cssNamedColor, convertToBgColor }
+	return { bgColor, cssNamedColor, convertToBgColor  }
 }
