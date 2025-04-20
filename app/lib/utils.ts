@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 export const outlineStyle = clsx(
 	'focus-visible:outline-4',
 	'focus-visible:outline-seggreen',
-	'focus-visible:ring-0',
+	'focus-visible:ring-0'
 );
 
 export const getStyleWithPrimaryColor = (style: ClassValue, primaryColor: Colors) => {
