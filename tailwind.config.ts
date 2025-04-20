@@ -16,7 +16,9 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			colors: {
-				seggreen: '#00FF00',
+				lime: '#00FF00',
+				mediumslateblue: '#7b68ee',
+				hotpink: '#ff69b4',
 				segblue: '#008080',
 				// 全体的な背景色
 				background: "hsl(var(--background))",
